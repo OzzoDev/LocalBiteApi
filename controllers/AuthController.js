@@ -41,7 +41,7 @@ export const signin = async (req, res) => {
     if (!unhashedPassword) {
       return res
         .status(400)
-        .json({ message: "Incorrect password", success: true });
+        .json({ message: "Incorrect password", success: false });
     }
 
     console.log(`User ${user.username} signed in`);
