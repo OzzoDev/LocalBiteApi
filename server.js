@@ -1,11 +1,13 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
 import AuthRouter from "./routes/AuthRouter.js";
 import ApiRouter from "./routes/ApiRouter.js";
 import { serverSession } from "./middlewares/Session.js";
 import { ensureAuthenticated } from "./middlewares/Auth.js";
 import "./config/db.js";
+import { setCredentialsHeader } from "./middlewares/Credentials.js";
 
 dotenv.config();
 
@@ -20,7 +22,9 @@ const openCors = cors({
 });
 
 app.use(openCors);
+app.use(setCredentialsHeader);
 app.use(express.json());
+app.use(cookieParser());
 app.use(serverSession);
 
 app.use("/auth", AuthRouter);
