@@ -3,10 +3,10 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const mongoUrl = process.env.MONGO_CONNECT;
+const MONGO_URI = process.env.MONGO_CONNECT;
 
 mongoose
-  .connect(mongoUrl)
+  .connect(MONGO_URI)
   .then(() => {
     console.log("Mongodb connect");
   })
