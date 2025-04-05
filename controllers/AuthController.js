@@ -4,7 +4,9 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const users = [];
+const users = [
+  { username: "oscar", password: "$2b$10$QE7RNfvMQK5ODXmt0avZT.9QiuA3gxKY55biBqZNrm8T5P/ZpSo3W" },
+];
 
 const JWT_SECRET = process.env.JWT_SECRET;
 

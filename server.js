@@ -12,7 +12,14 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-app.use(cors());
+const openCors = cors({
+  origin: (_, callback) => {
+    return callback(null, true);
+  },
+  credentials: true,
+});
+
+app.use(openCors);
 app.use(express.json());
 app.use(serverSession);
 

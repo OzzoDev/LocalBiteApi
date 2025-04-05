@@ -12,8 +12,5 @@ export const serverSession = session({
     mongoUrl: MONGO_URI,
     ttl: 365 * 24 * 60 * 60,
   }),
-  cookie: { httpOnly: true, secure: false, maxAge: 365 * 24 * 60 * 60 * 1000 }, // Set secure: true in production
+  cookie: { httpOnly: true, secure: false, maxAge: 365 * 24 * 60 * 60 * 1000, sameSite: "None" }, // Set secure: true in production
 });
-
-//how to use
-//req.session.jwt = jwt
