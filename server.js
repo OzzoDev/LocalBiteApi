@@ -6,8 +6,9 @@ import AuthRouter from "./routes/AuthRouter.js";
 import ApiRouter from "./routes/ApiRouter.js";
 import { serverSession } from "./middlewares/Session.js";
 import { ensureAuthenticated } from "./middlewares/Auth.js";
-import "./config/db.js";
 import { setCredentialsHeader } from "./middlewares/Credentials.js";
+import "./config/mongodb.js";
+import "./config/postgres.js";
 
 dotenv.config();
 

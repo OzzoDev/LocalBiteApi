@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import { pool } from "../config/postgres.js";
 
 dotenv.config();
 
@@ -14,19 +15,30 @@ export const signup = async (req, res) => {
   const { username, password } = req.body;
 
   try {
+    const logQuery = `SELECT * FROM users;`;
+    const logResult = await pool.query(logQuery);
+
+    // Use console.table to display the current users in a table format
+    console.table(logResult.rows);
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const newUser = { username, password: hashedPassword };
-    users.push(newUser);
+    const insertQuery = `
+    INSERT INTO users (username,password)
+    VALUES ($1,$2)
+    RETURNING *;
+    `;
 
-    console.log(users);
+    const result = await pool.query(insertQuery, [username, hashedPassword]);
 
-    const jwtToken = jwt.sign({ username }, JWT_SECRET, { expiresIn: "1y" });
+    const newUser = result.rows[0];
+
+    const jwtToken = jwt.sign({ username: newUser.username }, JWT_SECRET, { expiresIn: "1y" });
 
     req.session.jwt = jwtToken;
 
     res.status(201).json({
-      users,
+      user: newUser,
       message: "Account registered successfully",
       success: true,
     });
