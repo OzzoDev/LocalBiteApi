@@ -1,0 +1,32 @@
+{
+  "name": "local-bite-api",
+  "version": "1.0.0",
+  "description": "LocalBiteApi is a RESTful API designed for a larger upcoming project aimed at helping users discover the best restaurants in their local area, as reviewed by fellow diners. This API also enables businesses to enhance their marketing efforts and increase their visibility among customers.",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OzzoDev/LocalBiteApi.git"
+  },
+  "author": "OzzoDev",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/OzzoDev/LocalBiteApi/issues"
+  },
+  "homepage": "https://github.com/OzzoDev/LocalBiteApi#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "body-parser": "^2.2.0",
+    "connect-mongo": "^5.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^5.1.0",
+    "express-session": "^1.18.1",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.13.2",
+    "zod": "^3.24.2"
+  }
+}
