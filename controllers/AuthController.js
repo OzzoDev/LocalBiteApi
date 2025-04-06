@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import { pool } from "../config/postgres.js";
+import pool from "../config/postgres.js";
 
 dotenv.config();
 
@@ -14,19 +14,20 @@ const JWT_SECRET = process.env.JWT_SECRET;
 export const signup = async (req, res) => {
   const { username, password } = req.body;
 
+  console.log(username, password);
+
   try {
     const logQuery = `SELECT * FROM users;`;
     const logResult = await pool.query(logQuery);
 
-    // Use console.table to display the current users in a table format
     console.table(logResult.rows);
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const insertQuery = `
-    INSERT INTO users (username,password)
-    VALUES ($1,$2)
-    RETURNING *;
+      INSERT INTO users (username, password)
+      VALUES ($1, $2)
+      RETURNING id, username;
     `;
 
     const result = await pool.query(insertQuery, [username, hashedPassword]);
