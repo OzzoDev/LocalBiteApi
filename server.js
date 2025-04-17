@@ -1,16 +1,14 @@
+import "./config/loadEnv.js";
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
+import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import AuthRouter from "./routes/AuthRouter.js";
 import ApiRouter from "./routes/ApiRouter.js";
 import { serverSession } from "./middlewares/Session.js";
-import { ensureAuthenticated } from "./middlewares/Auth.js";
-import { setCredentialsHeader } from "./middlewares/Credentials.js";
+import { authenticate } from "./middlewares/Auth.js";
 import "./config/mongodb.js";
 import "./config/postgres.js";
-
-dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -23,13 +21,14 @@ const openCors = cors({
 });
 
 app.use(openCors);
-app.use(setCredentialsHeader);
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(helmet());
 app.use(serverSession);
 
 app.use("/auth", AuthRouter);
-app.use("/api", ensureAuthenticated, ApiRouter);
+app.use("/api", authenticate, ApiRouter);
 
 app.get("/", (_, res) => {
   res.send("Welcome to the LocalBiteApi");

@@ -1,8 +1,5 @@
-import dotenv from "dotenv";
 import pkg from "pg";
 const { Pool } = pkg;
-
-dotenv.config();
 
 const POSTGRES_URL = process.env.POSTGRES_URL;
 

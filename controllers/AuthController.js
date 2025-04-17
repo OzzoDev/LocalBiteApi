@@ -1,9 +1,6 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
 import pool from "../config/postgres.js";
-
-dotenv.config();
 
 const users = [
   { username: "oscar", password: "$2b$10$QE7RNfvMQK5ODXmt0avZT.9QiuA3gxKY55biBqZNrm8T5P/ZpSo3W" },
