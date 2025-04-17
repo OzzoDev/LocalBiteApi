@@ -1,8 +1,8 @@
 import "./config/loadEnv.js";
 import express from "express";
-import cors from "cors";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
+import { corsOptions } from "./config/cors.js";
 import AuthRouter from "./routes/AuthRouter.js";
 import ApiRouter from "./routes/ApiRouter.js";
 import { serverSession } from "./middlewares/Session.js";
@@ -13,14 +13,7 @@ import "./config/postgres.js";
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-const openCors = cors({
-  origin: (_, callback) => {
-    return callback(null, true);
-  },
-  credentials: true,
-});
-
-app.use(openCors);
+app.use(corsOptions);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
