@@ -1,33 +1,29 @@
-import pkg from "pg";
-const { Pool } = pkg;
+import pg from "pg";
 
-const POSTGRES_URL = process.env.POSTGRES_URL;
-
-const pool = new Pool({
-  connectionString: POSTGRES_URL,
-  ssl: {
-    rejectUnauthorized: false,
-  },
+const pool = new pg.Pool({
+  host: process.env.POSTGRES_HOST,
+  port: process.env.POSTGRES_PORT,
+  user: process.env.POSTGRES_USER,
+  password: process.env.POSTGRES_PASSWORD,
+  database: process.env.POSTGRES_DB,
 });
 
-(async () => {
+async function main() {
+  const client = await pool.connect();
   try {
-    await pool.query("SELECT NOW()");
-    console.log("✅ PostgreSQL DB connected!");
-
-    const createTableQuery = `
-      CREATE TABLE IF NOT EXISTS users (
-        id SERIAL PRIMARY KEY,
-        username TEXT NOT NULL UNIQUE,
-        password TEXT NOT NULL
-      );
-    `;
-
-    await pool.query(createTableQuery);
-    console.log("✅ 'users' table ensured.");
+    const response = await client.query("SELECT NOW()");
+    console.log(response.rows);
+    const { rows } = response;
+    console.log(rows);
   } catch (err) {
-    console.error("❌ PostgreSQL setup error:", err.message);
+    console.error(err);
+  } finally {
+    client.release();
   }
-})();
+}
+
+main()
+  .then(() => console.log("Connected to Postgres"))
+  .catch((err) => console.error("Error connecting to Postgres", err));
 
 export default pool;

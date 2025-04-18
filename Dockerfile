@@ -1,13 +1,9 @@
-FROM node:23-slim
+FROM node:20-alpine
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
-COPY package*.json ./
+COPY package*.json .
 
 RUN npm install
-
-COPY . .
-
-EXPOSE 3123
 
 CMD ["npx", "nodemon", "server.js"]
