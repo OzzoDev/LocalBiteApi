@@ -12,14 +12,6 @@ services:  # Define the services (containers) that will be part of this applicat
     networks:  # Specify which networks the service will connect to.
       - mynetwork  # Connect this service to the 'mynetwork' network defined below.
 
-    # environment:  # Define environment variables for the application.
-    #   DB_USER: Test  # Database username to connect to the database.
-    #   DB_HOST: db  # Hostname for the database service (refers to the 'db' service defined below).
-    #   DB_NAME: db123  # Name of the database to connect to.
-    #   DB_PASSWORD: password123  # Password for the database user.
-    #   DB_PORT: 5432  # Port on which the database is listening.
-    #   PORT: 3123  # Port on which the application will run.
-
     environment:
       PORT: ${PORT}
       NODE_ENV: ${NODE_ENV}
