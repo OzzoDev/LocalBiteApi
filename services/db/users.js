@@ -12,14 +12,12 @@ export const addUser = async (userData) => {
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  const query = `INSERT INTO users (username,email,password) values ($1, $2, $3) RETURNING *`;
+  const query = `INSERT INTO users (username,email,password) values ($1, $2, $3) RETURNING username, email`;
   const values = [username, email, hashedPassword];
 
   const result = await executeQuery(query, values);
 
-  const { password: _, ...newUser } = result[0];
-
-  return newUser;
+  return result[0];
 };
 
 export const performLogin = async (userData) => {
@@ -41,6 +39,10 @@ export const performLogin = async (userData) => {
 
 export const findUser = async (userData) => {
   const { username, email } = userData;
+
+  const users = await executeQuery("SELECT * FROM users");
+
+  console.log("Users", users);
 
   const query = `
     SELECT * FROM users
