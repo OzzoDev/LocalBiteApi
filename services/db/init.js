@@ -1,9 +1,8 @@
 import pool from "../../config/postgres.js";
 
 export async function ensureUsersTable() {
-  const client = await pool.connect();
   try {
-    await client.query(`
+    const query = `
       CREATE TABLE IF NOT EXISTS users (
         id BIGSERIAL PRIMARY KEY,
         username VARCHAR(100) UNIQUE NOT NULL,
@@ -11,11 +10,23 @@ export async function ensureUsersTable() {
         password VARCHAR(255) NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
-    `);
+    `;
+    await executeQuery(query);
     console.log("✅ Users table ensured.");
   } catch (err) {
-    console.error("❌ Failed to create tables:", err);
+    console.error("Error ensuring users table:", err);
+  }
+}
+
+export const executeQuery = async (query, values = []) => {
+  const client = await pool.connect();
+  try {
+    const response = await client.query(query, values);
+    return response.rows;
+  } catch (err) {
+    console.error("Database query error:", err);
+    throw err;
   } finally {
     client.release();
   }
-}
+};
