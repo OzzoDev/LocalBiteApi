@@ -1,4 +1,3 @@
-import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { addUser, performLogin } from "../services/db/users.js";
 
