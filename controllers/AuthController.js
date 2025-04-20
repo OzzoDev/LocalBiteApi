@@ -2,25 +2,11 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { addUser } from "../services/db/users.js";
 
-const users = [
-  {
-    username: "oscar",
-    password: "$2b$10$QE7RNfvMQK5ODXmt0avZT.9QiuA3gxKY55biBqZNrm8T5P/ZpSo3W",
-  },
-];
-
 const JWT_SECRET = process.env.JWT_SECRET;
 
 export const signup = async (req, res) => {
-  const { username, email, password } = req.body;
-
   try {
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = await addUser({
-      username,
-      email,
-      password: hashedPassword,
-    });
+    const newUser = await addUser(req.body);
 
     const jwtToken = jwt.sign({ username: newUser.username }, JWT_SECRET, {
       expiresIn: "1y",

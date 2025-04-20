@@ -1,3 +1,4 @@
+import bcrypt from "bcryptjs";
 import { executeQuery } from "./init.js";
 
 export const addUser = async (userData) => {
@@ -9,11 +10,16 @@ export const addUser = async (userData) => {
     throw new Error("Username or email already exists");
   }
 
+  const hashedPassword = await bcrypt.hash(password, 10);
+
   const query = `INSERT INTO users (username,email,password) values ($1, $2, $3) RETURNING *`;
-  const values = [username, email, password];
+  const values = [username, email, hashedPassword];
 
   const result = await executeQuery(query, values);
-  return result[0];
+
+  const { password: _, ...newUser } = result[0];
+
+  return newUser;
 };
 
 export const ensureUniqueUser = async (userData) => {
