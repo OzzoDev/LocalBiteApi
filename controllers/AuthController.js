@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import pool from "../config/postgres.js";
+import { addUser } from "../services/db/users.js";
 
 const users = [
   {
@@ -12,27 +13,15 @@ const users = [
 const JWT_SECRET = process.env.JWT_SECRET;
 
 export const signup = async (req, res) => {
-  const { username, password } = req.body;
-
-  console.log(username, password);
+  const { username, email, password } = req.body;
 
   try {
-    const logQuery = `SELECT * FROM users;`;
-    const logResult = await pool.query(logQuery);
-
-    console.table(logResult.rows);
-
     const hashedPassword = await bcrypt.hash(password, 10);
-
-    const insertQuery = `
-      INSERT INTO users (username, password)
-      VALUES ($1, $2)
-      RETURNING id, username;
-    `;
-
-    const result = await pool.query(insertQuery, [username, hashedPassword]);
-
-    const newUser = result.rows[0];
+    const newUser = await addUser({
+      username,
+      email,
+      password: hashedPassword,
+    });
 
     const jwtToken = jwt.sign({ username: newUser.username }, JWT_SECRET, {
       expiresIn: "1y",
