@@ -1,6 +1,5 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import pool from "../config/postgres.js";
 import { addUser } from "../services/db/users.js";
 
 const users = [
@@ -47,17 +46,13 @@ export const signin = async (req, res) => {
     const user = users.find((u) => u.username === username);
 
     if (!user) {
-      return res
-        .status(404)
-        .json({ message: "User not found", success: false });
+      return res.status(404).json({ message: "User not found", success: false });
     }
 
     const unhashedPassword = await bcrypt.compare(password, user.password);
 
     if (!unhashedPassword) {
-      return res
-        .status(400)
-        .json({ message: "Incorrect password", success: false });
+      return res.status(400).json({ message: "Incorrect password", success: false });
     }
 
     console.log(`User ${user.username} signed in`);
