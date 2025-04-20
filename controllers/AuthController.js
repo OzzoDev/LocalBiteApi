@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { addUser } from "../services/db/users.js";
+import { addUser, performLogin } from "../services/db/users.js";
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -26,24 +26,10 @@ export const signup = async (req, res) => {
 };
 
 export const signin = async (req, res) => {
-  const { username, password } = req.body;
-
   try {
-    const user = users.find((u) => u.username === username);
+    const user = performLogin(req.body);
 
-    if (!user) {
-      return res.status(404).json({ message: "User not found", success: false });
-    }
-
-    const unhashedPassword = await bcrypt.compare(password, user.password);
-
-    if (!unhashedPassword) {
-      return res.status(400).json({ message: "Incorrect password", success: false });
-    }
-
-    console.log(`User ${user.username} signed in`);
-
-    const jwtToken = jwt.sign({ username }, JWT_SECRET, { expiresIn: "1y" });
+    const jwtToken = jwt.sign({ username: user.username }, JWT_SECRET, { expiresIn: "1y" });
 
     req.session.jwt = jwtToken;
 

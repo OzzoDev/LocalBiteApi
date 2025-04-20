@@ -22,14 +22,36 @@ export const addUser = async (userData) => {
   return newUser;
 };
 
-export const ensureUniqueUser = async (userData) => {
+export const performLogin = async (userData) => {
+  const { password } = userData;
+
+  const user = findUser(userData);
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  const isPasswordMatch = await bcrypt.compare(password, user.password);
+  if (!isPasswordMatch) {
+    throw new Error("Incorrect password");
+  }
+
+  const { password: _, ...authenticatedUser } = user;
+  return authenticatedUser;
+};
+
+export const findUser = async (userData) => {
   const { username, email } = userData;
 
   const query = `
     SELECT * FROM users
     WHERE LOWER(username) = LOWER($1) OR LOWER(email) = LOWER($2)
   `;
-  const existingUser = await executeQuery(query, [username, email]);
 
-  return existingUser.length === 0;
+  const result = await executeQuery(query, [username, email]);
+  return result[0];
+};
+
+export const ensureUniqueUser = async (userData) => {
+  const user = await findUser(userData);
+  return !user;
 };
