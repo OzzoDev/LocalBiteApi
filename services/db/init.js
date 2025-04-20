@@ -2,19 +2,29 @@ import pool from "../../config/postgres.js";
 
 export async function ensureUsersTable() {
   try {
-    const query = `
+    const tableQuery = `
       CREATE TABLE IF NOT EXISTS users (
         id BIGSERIAL PRIMARY KEY,
-        username VARCHAR(100) UNIQUE NOT NULL,
-        email VARCHAR(255) UNIQUE NOT NULL,
+        username VARCHAR(100) NOT NULL,
+        email VARCHAR(255) NOT NULL,
         password VARCHAR(255) NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        UNIQUE (LOWER(username)),
-        UNIQUE (LOWER((email)))
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `;
-    await executeQuery(query);
-    console.log("✅ Users table ensured.");
+
+    const usernameIndex = `
+      CREATE UNIQUE INDEX IF NOT EXISTS idx_users_username_lower ON users (LOWER(username));
+    `;
+
+    const emailIndex = `
+      CREATE UNIQUE INDEX IF NOT EXISTS idx_users_email_lower ON users (LOWER(email));
+    `;
+
+    await executeQuery(tableQuery);
+    await executeQuery(usernameIndex);
+    await executeQuery(emailIndex);
+
+    console.log("✅ Users table and indexes ensured.");
   } catch (err) {
     console.error("Error ensuring users table:", err);
   }

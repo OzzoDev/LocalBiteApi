@@ -26,11 +26,11 @@ const loginAttemptSchema = z
       .string({ message: "Incorrect password" })
       .nonempty({ message: "Password is required" }),
   })
+  .strict()
   .refine((data) => data.username || data.email, {
     message: "Either username or email must be provided.",
     path: ["username"],
-  })
-  .strict();
+  });
 
 export const validateNewUser = (req, res, next) => {
   try {

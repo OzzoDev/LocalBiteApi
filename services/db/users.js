@@ -23,7 +23,8 @@ export const addUser = async (userData) => {
 export const performLogin = async (userData) => {
   const { password } = userData;
 
-  const user = findUser(userData);
+  const user = await findUser(userData);
+
   if (!user) {
     throw new Error("User not found");
   }
@@ -39,10 +40,6 @@ export const performLogin = async (userData) => {
 
 export const findUser = async (userData) => {
   const { username, email } = userData;
-
-  const users = await executeQuery("SELECT * FROM users");
-
-  console.log("Users", users);
 
   const query = `
     SELECT * FROM users
