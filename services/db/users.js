@@ -86,6 +86,8 @@ export const verifyUser = async (userData) => {
     storedOtp,
   ]);
 
+  await updateOtp(insertResult[0].id);
+
   return insertResult[0];
 };
 
