@@ -33,7 +33,7 @@ export const addUser = async (userData) => {
 export const verifyUser = async (userData) => {
   const { username, email, otp } = userData;
 
-  const existingVerifiedUser = findUser(userData);
+  const existingVerifiedUser = await findUser(userData);
 
   if (existingVerifiedUser) {
     throw new IsAlreadyVerifiedError();

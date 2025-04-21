@@ -11,8 +11,10 @@ export const signup = async (req, res, next) => {
 
     await verifyEmail(email, username, otp);
 
+    const { otp: _, ...safeUserData } = newUser;
+
     res.status(201).json({
-      user: newUser,
+      user: safeUserData,
       message: "Account pending verification",
       success: true,
     });
