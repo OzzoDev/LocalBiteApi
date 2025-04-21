@@ -1,5 +1,5 @@
 import pg from "pg";
-import { ensureUsersTable } from "../services/db/init.js";
+import { ensureUnVerifiedUsersTable, ensureUsersTable } from "../services/db/init.js";
 
 const pool = new pg.Pool({
   host: process.env.POSTGRES_HOST,
@@ -15,6 +15,7 @@ const pool = new pg.Pool({
     console.log("✅ Connected to Postgres");
     client.release();
     await ensureUsersTable();
+    await ensureUnVerifiedUsersTable();
   } catch (err) {
     console.error("❌ Error connecting to Postgres", err);
   }

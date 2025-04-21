@@ -16,7 +16,7 @@ export const addUser = async (userData) => {
 
   const otp = generateOTP();
 
-  const query = `INSERT INTO users (username,email,password,otp) values ($1, $2, $3, $4) RETURNING username, email`;
+  const query = `INSERT INTO unverified_users (username,email,password,otp) values ($1, $2, $3, $4) RETURNING username, email`;
   const values = [username, email, hashedPassword, otp];
 
   const result = await executeQuery(query, values);
@@ -55,6 +55,17 @@ export const findUser = async (userData) => {
 };
 
 export const ensureUniqueUser = async (userData) => {
-  const user = await findUser(userData);
-  return !user;
+  const { username, email } = userData;
+
+  const query = `
+  SELECT * FROM (
+    SELECT username, email FROM users
+    UNION
+    SELECT username, email FROM unverified_users
+  ) AS combined_users
+  WHERE LOWER(username) = LOWER($1) OR LOWER(email) = LOWER($2)
+`;
+
+  const result = await executeQuery(query, [username, email]);
+  return !result[0];
 };
