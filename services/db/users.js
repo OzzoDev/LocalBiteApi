@@ -133,3 +133,20 @@ export const ensureUniqueUser = async (userData) => {
   const result = await executeQuery(query, [username, email]);
   return result.length === 0;
 };
+
+export const incrementLoginFails = async (userId) => {
+  const query = `
+    UPDATE users
+    SET login_fails = login_fails + 1
+    WHERE id = $1
+    RETURNING login_fails
+  `;
+
+  const result = await executeQuery(query, [userId]);
+
+  if (result.length === 0) {
+    throw new UserNotFoundError();
+  }
+
+  return result[0].login_fails;
+};
