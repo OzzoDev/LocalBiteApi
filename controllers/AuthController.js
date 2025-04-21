@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import { addUser, performLogin } from "../services/db/users.js";
+import { LogOutError } from "../errors/AuthErrors.js";
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -43,7 +44,7 @@ export const signin = async (req, res, next) => {
 export const signout = (req, res) => {
   req.session.destroy((err) => {
     if (err) {
-      return res.status(500).json({ message: "Logout failed", success: false });
+      throw new LogOutError();
     }
     res.status(200).json({ message: "Logged out successfully", success: true });
   });

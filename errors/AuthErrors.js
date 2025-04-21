@@ -29,3 +29,9 @@ export class UnauthticatedError extends AppError {
     super(message, 401);
   }
 }
+
+export class LogOutError extends AppError {
+  constructor(message = "Logout failed") {
+    super(message, 400);
+  }
+}
