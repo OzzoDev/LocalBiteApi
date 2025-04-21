@@ -4,12 +4,13 @@ import {
   IsVerifiedError,
   SessionExpiredError,
   UnauthticatedError,
+  AccountSuspensionError,
 } from "../errors/AuthErrors.js";
 import { findUser } from "../services/db/users.js";
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
-export const authenticate = (req, _, next) => {
+export const authenticate = async (req, _, next) => {
   const token = req.session.jwt;
 
   if (!token) {
@@ -21,6 +22,16 @@ export const authenticate = (req, _, next) => {
 
     if (!decoded) {
       return next(new UnauthticatedError());
+    }
+
+    const user = await findUser(decoded);
+
+    if (!user) {
+      next(new UserNotFoundError());
+    }
+
+    if (!user.is_suspended) {
+      next(new AccountSuspensionError());
     }
 
     req.user = decoded;
@@ -63,4 +74,22 @@ export const ensureNotLoggedIn = (req, _, next) => {
   }
 
   next();
+};
+
+export const ensureNotSuspended = async (req, _, next) => {
+  try {
+    const user = await findUser(req.body);
+
+    if (!user) {
+      next();
+    }
+
+    if (user.is_suspended) {
+      next(new AccountSuspensionError());
+    }
+
+    next();
+  } catch (err) {
+    next(err);
+  }
 };
