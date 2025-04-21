@@ -142,6 +142,12 @@ export const updatePassword = async (userData) => {
 
   const result = await executeQuery(query, [user.id, hashedPassword]);
 
+  const userId = user.id;
+
+  await updateOtp(userId);
+  await resetLoginFails(userId);
+  await unsuspendAccount(userId);
+
   return result.length !== 0;
 };
 
@@ -155,6 +161,15 @@ export const findUser = async (userData) => {
 
   const result = await executeQuery(query, [username, email]);
   return result[0];
+};
+
+const updateOtp = async (userId) => {
+  const query = `
+    UPDATE users
+    SET otp = $2
+    WHERE id = $1
+  `;
+  return await executeQuery(query, [userId, generateOTP()]);
 };
 
 const ensureUniqueUser = async (userData) => {
