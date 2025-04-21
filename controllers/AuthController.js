@@ -1,4 +1,4 @@
-import { addUser, performLogin, verifyUser } from "../services/db/users.js";
+import { addUser, performLogin, verifyUser, updatePassword } from "../services/db/users.js";
 import { LogOutError, UserNotFoundError } from "../errors/AuthErrors.js";
 import { setJwt } from "../services/auth/jwt.js";
 import { verifyEmail, sendPasswordResetEmail } from "../services/auth/email.js";
@@ -72,6 +72,20 @@ export const requestPasswordResetOtp = async (req, res, next) => {
     }
 
     await sendPasswordResetEmail(user.email, user.username, user.otp);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const resetPassword = async (req, res, next) => {
+  const userData = req.body;
+
+  try {
+    const resettedSuccessfully = await updatePassword(userData);
+
+    if (resettedSuccessfully) {
+      setJwt(userData, req);
+    }
   } catch (err) {
     next(err);
   }

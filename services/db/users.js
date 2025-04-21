@@ -119,12 +119,16 @@ export const performLogin = async (userData) => {
 };
 
 export const updatePassword = async (userData) => {
-  const { password } = userData;
+  const { password, otp } = userData;
 
   const user = await findUser(userData);
 
   if (!user) {
     throw new UserNotFoundError();
+  }
+
+  if (user.otp !== otp) {
+    throw new OtpError();
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);

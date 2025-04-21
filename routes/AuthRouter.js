@@ -5,6 +5,7 @@ import {
   signout,
   verify,
   requestPasswordResetOtp,
+  resetPassword,
 } from "../controllers/AuthController.js";
 import {
   validateLoginAttempt,
@@ -25,6 +26,6 @@ router.get("/password-reset-otp/:identifer", requestPasswordResetOtp);
 router.post("/signup", validateNewUser, signup);
 router.post("/signin", validateLoginAttempt, signin);
 router.post("/verify", validateUserVerification, verify);
-router.post("/reset-password", validatePasswordReset);
+router.post("/reset-password", validatePasswordReset, resetPassword);
 
 export default router;
