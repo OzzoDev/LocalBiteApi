@@ -59,3 +59,9 @@ export class EmailError extends AppError {
     super(message, 500);
   }
 }
+
+export class IsLoggedInError extends AppError {
+  constructor(message = "You cannot be logged in to perform this action") {
+    super(message, 400);
+  }
+}

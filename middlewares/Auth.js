@@ -1,21 +1,26 @@
 import jwt from "jsonwebtoken";
-import { IsVerifiedError, SessionExpiredError, UnauthticatedError } from "../errors/AuthErrors.js";
+import {
+  IsLoggedInError,
+  IsVerifiedError,
+  SessionExpiredError,
+  UnauthticatedError,
+} from "../errors/AuthErrors.js";
 import { findUser } from "../services/db/users.js";
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
 export const authenticate = (req, _, next) => {
-  const jwtToken = req.session.jwt;
+  const token = req.session.jwt;
 
-  if (!jwtToken) {
-    throw new UnauthticatedError();
+  if (!token) {
+    return next(new UnauthticatedError());
   }
 
   try {
-    const decoded = jwt.verify(jwtToken, JWT_SECRET);
+    const decoded = jwt.verify(token, JWT_SECRET);
 
     if (!decoded) {
-      throw new UnauthticatedError();
+      return next(new UnauthticatedError());
     }
 
     req.user = decoded;
@@ -48,4 +53,14 @@ export const ensureIsVerified = async (req, _, next) => {
   } catch (err) {
     next(err);
   }
+};
+
+export const ensureNotLoggedIn = (req, _, next) => {
+  const isLoggedIn = !!req.session.jwt;
+
+  if (isLoggedIn) {
+    return next(new IsLoggedInError());
+  }
+
+  next();
 };

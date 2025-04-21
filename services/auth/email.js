@@ -28,6 +28,7 @@ export const sendEmail = async (recipientEmail, subject, text, html) => {
     throw new EmailError();
   }
 };
+
 export const verifyEmail = async (recipientEmail, username, otp) => {
   const subject = "Verify your email";
   const text = `Hi ${username}! To successfully register your account use this code to verify your account`;

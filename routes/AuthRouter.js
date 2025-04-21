@@ -5,12 +5,16 @@ import {
   validateNewUser,
   validateUserVerification,
 } from "../validators/users.js";
+import { authenticate, ensureNotLoggedIn } from "../middlewares/Auth.js";
 
 const router = express.Router();
+
+router.post("/signout", authenticate, signout);
+
+router.use("/", ensureNotLoggedIn);
 
 router.post("/signup", validateNewUser, signup);
 router.post("/signin", validateLoginAttempt, signin);
 router.post("/verify", validateUserVerification, verify);
-router.post("/signout", signout);
 
 export default router;
