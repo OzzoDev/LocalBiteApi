@@ -121,7 +121,7 @@ export const verifyEmailLayout = (title, message, otp) => {
                                                             <tr>
                                                                 <td class="pad" style="width:100%;">
                                                                     <div class="alignment" align="center" style="line-height:10px">
-                                                                        <div style="max-width: 64px;"><img src="https://imgur.com/a/9tg4hRS" style="display: block; height: auto; border: 0; width: 100%;" width="64" alt title height="auto"></div>
+                                                                        <div style="max-width: 64px;"><img src="https://i.imgur.com/OOdcsQ6.png" style="display: block; height: auto; border: 0; width: 100%;" width="64" alt title height="auto"></div>
                                                                     </div>
                                                                 </td>
                                                             </tr>
