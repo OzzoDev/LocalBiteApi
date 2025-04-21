@@ -1,4 +1,5 @@
 import pool from "../../config/postgres.js";
+import { generateOTP } from "../../utils/codes.js";
 
 export async function ensureUsersTable() {
   try {
@@ -8,9 +9,13 @@ export async function ensureUsersTable() {
         username VARCHAR(100) NOT NULL,
         email VARCHAR(255) NOT NULL,
         password VARCHAR(255) NOT NULL,
+        is_verified BOOLEAN DEFAULT FALSE,
+        is_suspended BOOLEAN DEFAULT FALSE,
+        otp VARCHAR(8) NOT NULL, 
+        login_fails INT DEFAULT 0,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      );
-    `;
+    );
+  `;
 
     const usernameIndex = `
       CREATE UNIQUE INDEX IF NOT EXISTS idx_users_username_lower ON users (LOWER(username));

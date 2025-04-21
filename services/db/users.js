@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import { executeQuery } from "./init.js";
 import { DuplicateUserError, PasswordError, UserNotFoundError } from "../../errors/AuthErrors.js";
+import { generateOTP } from "../../utils/codes.js";
 
 export const addUser = async (userData) => {
   const { username, email, password } = userData;
@@ -13,8 +14,10 @@ export const addUser = async (userData) => {
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  const query = `INSERT INTO users (username,email,password) values ($1, $2, $3) RETURNING username, email`;
-  const values = [username, email, hashedPassword];
+  const otp = generateOTP();
+
+  const query = `INSERT INTO users (username,email,password,otp) values ($1, $2, $3, $4) RETURNING username, email`;
+  const values = [username, email, hashedPassword, otp];
 
   const result = await executeQuery(query, values);
 
