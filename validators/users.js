@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { RequestBodyValidationError } from "../errors/ValidationErrors";
+import { RequestBodyValidationError } from "../errors/ValidationErrors.js";
 
 const newUserSchema = z
   .object({
@@ -39,7 +39,9 @@ export const validateNewUser = (req, _, next) => {
     next();
   } catch (err) {
     if (err instanceof z.ZodError) {
-      throw new RequestBodyValidationError(err.errors.map((error) => error.message).join(", "));
+      return next(
+        new RequestBodyValidationError(err.errors.map((error) => error.message).join(", "))
+      );
     }
 
     next(err);
@@ -52,7 +54,9 @@ export const validateLoginAttempt = (req, _, next) => {
     next();
   } catch (err) {
     if (err instanceof z.ZodError) {
-      throw new RequestBodyValidationError(err.errors.map((error) => error.message).join(", "));
+      return next(
+        new RequestBodyValidationError(err.errors.map((error) => error.message).join(", "))
+      );
     }
 
     next(err);
