@@ -3,13 +3,13 @@ import { z } from "zod";
 const newUserSchema = z
   .object({
     username: z
-      .string({ message: "Incorrect username" })
+      .string({ message: "Username is required" })
       .nonempty({ message: "Username is required" })
       .min(3, { message: "Username must be at least 3 characters long" })
       .max(30, { message: "Username cannot be longer than 30 characters" }),
-    email: z.string({ message: "Incorrect email" }).email({ message: "Invalid email format" }), // Move email validation here
+    email: z.string({ message: "Email is required" }).email({ message: "Invalid email format" }),
     password: z
-      .string({ message: "Incorrect password" })
+      .string({ message: "Password is required" })
       .nonempty({ message: "Password is required" })
       .min(8, { message: "Password must be at least 8 characters long" }),
   })
@@ -17,13 +17,13 @@ const newUserSchema = z
 
 const loginAttemptSchema = z
   .object({
-    username: z.string({ message: "Incorrect username" }).optional(),
+    username: z.string({ message: "Username is required" }).optional(),
     email: z
-      .string({ message: "Incorrect email" })
+      .string({ message: "Email is required" })
       .email({ message: "Invalid email format" })
       .optional(),
     password: z
-      .string({ message: "Incorrect password" })
+      .string({ message: "Password is required" })
       .nonempty({ message: "Password is required" }),
   })
   .strict()
