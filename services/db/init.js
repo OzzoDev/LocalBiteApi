@@ -1,4 +1,5 @@
 import pool from "../../config/postgres.js";
+import { sanitizeValues } from "../../utils/utils.js";
 
 export async function ensureUsersTable() {
   try {
@@ -68,9 +69,11 @@ export async function ensureUnVerifiedUsersTable() {
 }
 
 export const executeQuery = async (query, values = []) => {
+  const sanitizedValues = sanitizeValues(values);
   const client = await pool.connect();
+
   try {
-    const response = await client.query(query, values);
+    const response = await client.query(query, sanitizedValues);
     return response.rows;
   } catch (err) {
     console.error("Database query error:", err);
