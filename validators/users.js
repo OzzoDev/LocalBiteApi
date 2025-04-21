@@ -51,20 +51,6 @@ const verifyUserSchema = z
     path: ["username"],
   });
 
-const requestOtpSchema = z
-  .object({
-    username: z.string({ message: "Username is required" }).optional(),
-    email: z
-      .string({ message: "Email is required" })
-      .email({ message: "Invalid email format" })
-      .optional(),
-  })
-  .strict()
-  .refine((data) => data.username || data.email, {
-    message: "Either username or email must be provided.",
-    path: ["username"],
-  });
-
 const resetPasswordSchema = z
   .object({
     username: z.string({ message: "Username is required" }).optional(),
@@ -119,21 +105,6 @@ export const validateLoginAttempt = (req, _, next) => {
 export const validateUserVerification = (req, _, next) => {
   try {
     verifyUserSchema.parse(req.body);
-    next();
-  } catch (err) {
-    if (err instanceof z.ZodError) {
-      return next(
-        new RequestBodyValidationError(err.errors.map((error) => error.message).join(", "))
-      );
-    }
-
-    next(err);
-  }
-};
-
-export const validateOtpRequest = (req, _, next) => {
-  try {
-    requestOtpSchema.parse(req.body);
     next();
   } catch (err) {
     if (err instanceof z.ZodError) {

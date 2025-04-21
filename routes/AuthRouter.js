@@ -1,10 +1,15 @@
 import express from "express";
-import { signin, signup, signout, verify } from "../controllers/AuthController.js";
+import {
+  signin,
+  signup,
+  signout,
+  verify,
+  requestPasswordResetOtp,
+} from "../controllers/AuthController.js";
 import {
   validateLoginAttempt,
   validateNewUser,
   validateUserVerification,
-  validateOtpRequest,
   validatePasswordReset,
 } from "../validators/users.js";
 import { authenticate, ensureNotLoggedIn, ensureNotSuspended } from "../middlewares/Auth.js";
@@ -15,7 +20,7 @@ router.post("/signout", authenticate, signout);
 
 router.use("/", ensureNotLoggedIn, ensureNotSuspended);
 
-router.get("/password-reset-otp/:identifer", validateOtpRequest);
+router.get("/password-reset-otp/:identifer", requestPasswordResetOtp);
 
 router.post("/signup", validateNewUser, signup);
 router.post("/signin", validateLoginAttempt, signin);
