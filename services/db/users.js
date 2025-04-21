@@ -174,3 +174,35 @@ const resetLoginFails = async (userId) => {
 
   return 0;
 };
+
+const suspendAccount = async (userId) => {
+  const query = `
+    UPDATE users
+    SET is_suspended = true
+    WHERE id = $1
+  `;
+
+  const result = await executeQuery(query, [userId]);
+
+  if (result.length === 0) {
+    throw new UserNotFoundError();
+  }
+
+  return true;
+};
+
+const unsuspendAccount = async (userId) => {
+  const query = `
+    UPDATE users
+    SET is_suspended = false
+    WHERE id = $1
+  `;
+
+  const result = await executeQuery(query, [userId]);
+
+  if (result.length === 0) {
+    throw new UserNotFoundError();
+  }
+
+  return true;
+};
