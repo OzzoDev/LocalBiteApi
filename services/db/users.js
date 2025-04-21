@@ -118,7 +118,7 @@ export const findUser = async (userData) => {
   return result[0];
 };
 
-export const ensureUniqueUser = async (userData) => {
+const ensureUniqueUser = async (userData) => {
   const { username, email } = userData;
 
   const query = `
@@ -134,7 +134,7 @@ export const ensureUniqueUser = async (userData) => {
   return result.length === 0;
 };
 
-export const incrementLoginFails = async (userId) => {
+const incrementLoginFails = async (userId) => {
   const query = `
     UPDATE users
     SET login_fails = login_fails + 1
@@ -149,4 +149,20 @@ export const incrementLoginFails = async (userId) => {
   }
 
   return result[0].login_fails;
+};
+
+const resetLoginFails = async (userId) => {
+  const query = `
+    UPDATE users
+    SET login_fails = 0
+    WHERE id = $1
+  `;
+
+  const result = await executeQuery(query, [userId]);
+
+  if (result.length === 0) {
+    throw new UserNotFoundError();
+  }
+
+  return 0;
 };
