@@ -1,18 +1,12 @@
-import jwt from "jsonwebtoken";
 import { addUser, performLogin } from "../services/db/users.js";
 import { LogOutError } from "../errors/AuthErrors.js";
-
-const JWT_SECRET = process.env.JWT_SECRET;
+import { setJwt } from "../services/auth/jwt.js";
 
 export const signup = async (req, res, next) => {
   try {
     const newUser = await addUser(req.body);
 
-    const jwtToken = jwt.sign({ username: newUser.username }, JWT_SECRET, {
-      expiresIn: "1y",
-    });
-
-    req.session.jwt = jwtToken;
+    setJwt({ username: newUser.username }, req);
 
     res.status(201).json({
       user: newUser,
@@ -28,9 +22,7 @@ export const signin = async (req, res, next) => {
   try {
     const user = await performLogin(req.body);
 
-    const jwtToken = jwt.sign({ username: user.username }, JWT_SECRET, { expiresIn: "1y" });
-
-    req.session.jwt = jwtToken;
+    setJwt({ username: user.username }, req);
 
     res.status(200).json({
       message: "Logged in successfully",
