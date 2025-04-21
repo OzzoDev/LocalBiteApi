@@ -1,7 +1,7 @@
 import { addUser, performLogin, verifyUser } from "../services/db/users.js";
-import { LogOutError } from "../errors/AuthErrors.js";
+import { LogOutError, UserNotFoundError } from "../errors/AuthErrors.js";
 import { setJwt } from "../services/auth/jwt.js";
-import { verifyEmail } from "../services/auth/email.js";
+import { verifyEmail, sendPasswordResetEmail } from "../services/auth/email.js";
 
 export const signup = async (req, res, next) => {
   try {
@@ -18,8 +18,8 @@ export const signup = async (req, res, next) => {
       message: "Account pending verification",
       success: true,
     });
-  } catch (error) {
-    next(error);
+  } catch (err) {
+    next(err);
   }
 };
 
@@ -33,8 +33,8 @@ export const signin = async (req, res, next) => {
       message: "Logged in successfully",
       success: true,
     });
-  } catch (error) {
-    next(error);
+  } catch (err) {
+    next(err);
   }
 };
 
@@ -49,8 +49,8 @@ export const verify = async (req, res, next) => {
       message: "Account verified successfully",
       success: true,
     });
-  } catch (error) {
-    next(error);
+  } catch (err) {
+    next(err);
   }
 };
 
@@ -61,4 +61,18 @@ export const signout = (req, res) => {
     }
     res.status(200).json({ message: "Logged out successfully", success: true });
   });
+};
+
+export const requestPasswordResetOtp = async (req, res, next) => {
+  try {
+    const user = await findUser(req.params);
+
+    if (!user) {
+      throw new UserNotFoundError();
+    }
+
+    await sendPasswordResetEmail(user.email, user.username, user.otp);
+  } catch (err) {
+    next(err);
+  }
 };

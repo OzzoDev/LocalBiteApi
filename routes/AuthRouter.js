@@ -4,6 +4,8 @@ import {
   validateLoginAttempt,
   validateNewUser,
   validateUserVerification,
+  validateOtpRequest,
+  validatePasswordReset,
 } from "../validators/users.js";
 import { authenticate, ensureNotLoggedIn, ensureNotSuspended } from "../middlewares/Auth.js";
 
@@ -13,8 +15,11 @@ router.post("/signout", authenticate, signout);
 
 router.use("/", ensureNotLoggedIn, ensureNotSuspended);
 
+router.get("/password-reset-otp/:identifer", validateOtpRequest);
+
 router.post("/signup", validateNewUser, signup);
 router.post("/signin", validateLoginAttempt, signin);
 router.post("/verify", validateUserVerification, verify);
+router.post("/reset-password", validatePasswordReset);
 
 export default router;
