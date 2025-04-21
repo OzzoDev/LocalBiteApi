@@ -47,3 +47,9 @@ export class IsVerifiedError extends AppError {
     super(message, 401);
   }
 }
+
+export class EmailError extends AppError {
+  constructor(message = "Error sending email") {
+    super(message, 500);
+  }
+}

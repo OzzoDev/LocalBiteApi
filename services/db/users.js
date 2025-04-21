@@ -21,7 +21,7 @@ export const addUser = async (userData) => {
 
   const otp = generateOTP();
 
-  const query = `INSERT INTO unverified_users (username,email,password,otp) values ($1, $2, $3, $4) RETURNING id, username, email`;
+  const query = `INSERT INTO unverified_users (username,email,password,otp) values ($1, $2, $3, $4) RETURNING id, username, email, otp`;
   const values = [username, email, hashedPassword, otp];
 
   const result = await executeQuery(query, values);

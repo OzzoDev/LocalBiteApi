@@ -43,6 +43,7 @@ const verifyUserSchema = z
     otp: z
       .string({ message: "Verification code is required" })
       .nonempty({ message: "Verification code is required" }),
+    password: z.string().optional(),
   })
   .strict()
   .refine((data) => data.username || data.email, {
