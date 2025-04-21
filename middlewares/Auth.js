@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { SessionExpiredError, UnauthticatedError } from "../errors/AuthErrors";
+import { SessionExpiredError, UnauthticatedError } from "../errors/AuthErrors.js";
 
 const JWT_SECRET = process.env.JWT_SECRET;
 

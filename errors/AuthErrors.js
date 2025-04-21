@@ -1,4 +1,4 @@
-import { AppError } from "./AppError";
+import { AppError } from "./AppError.js";
 
 export class DuplicateUserError extends AppError {
   constructor(message = "Username or email already exists") {
