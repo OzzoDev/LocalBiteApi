@@ -1,4 +1,4 @@
-import { addUser, performLogin } from "../services/db/users.js";
+import { addUser, performLogin, verifyUser } from "../services/db/users.js";
 import { LogOutError } from "../errors/AuthErrors.js";
 import { setJwt } from "../services/auth/jwt.js";
 
@@ -26,6 +26,22 @@ export const signin = async (req, res, next) => {
 
     res.status(200).json({
       message: "Logged in successfully",
+      success: true,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const verify = async (req, res, next) => {
+  try {
+    const user = await verifyUser(req.body);
+
+    setJwt(user, req);
+
+    res.status(201).json({
+      user,
+      message: "Account verified successfully",
       success: true,
     });
   } catch (error) {
