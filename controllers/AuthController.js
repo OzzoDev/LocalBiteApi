@@ -1,4 +1,10 @@
-import { addUser, performLogin, verifyUser, updatePassword } from "../services/db/users.js";
+import {
+  addUser,
+  performLogin,
+  verifyUser,
+  updatePassword,
+  findUser,
+} from "../services/db/users.js";
 import { LogOutError, UserNotFoundError } from "../errors/AuthErrors.js";
 import { setJwt } from "../services/auth/jwt.js";
 import { verifyEmail, sendPasswordResetEmail } from "../services/auth/email.js";
@@ -64,14 +70,20 @@ export const signout = (req, res) => {
 };
 
 export const requestPasswordResetOtp = async (req, res, next) => {
+  const { identifer } = req.params;
+
   try {
-    const user = await findUser(req.params);
+    const user = await findUser({ username: identifer, email: identifer });
 
     if (!user) {
       throw new UserNotFoundError();
     }
 
     await sendPasswordResetEmail(user.email, user.username, user.otp);
+
+    res
+      .status(200)
+      .json({ message: "Verification code to reset password sent successfully", success: true });
   } catch (err) {
     next(err);
   }
@@ -86,6 +98,8 @@ export const resetPassword = async (req, res, next) => {
     if (resettedSuccessfully) {
       setJwt(userData, req);
     }
+
+    res.status(200).json({ message: "Password resetted successfully", success: true });
   } catch (err) {
     next(err);
   }

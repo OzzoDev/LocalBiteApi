@@ -9,6 +9,7 @@ import {
   AccountSuspensionError,
 } from "../../errors/AuthErrors.js";
 import { generateOTP } from "../../utils/codes.js";
+import { sendPasswordResetEmail, verifyEmail } from "../auth/email.js";
 
 export const addUser = async (userData) => {
   const { username, email, password } = userData;
@@ -41,7 +42,7 @@ export const verifyUser = async (userData) => {
   }
 
   const findUserQuery = `
-    SELECT username, email, password, otp
+    SELECT id, username, email, password, otp
     FROM unverified_users
     WHERE LOWER(username) = LOWER($1) OR LOWER(email) = LOWER($2)
   `;
@@ -55,13 +56,17 @@ export const verifyUser = async (userData) => {
   }
 
   const {
+    id,
     username: verifiedUsername,
     email: verifiedEmail,
     password,
     otp: storedOtp,
   } = userResult[0];
 
+  const updatedOtp = await updateOtp(id);
+
   if (storedOtp !== otp) {
+    await verifyEmail(verifiedEmail, verifiedUsername, updatedOtp);
     throw new OtpError();
   }
 
@@ -85,8 +90,6 @@ export const verifyUser = async (userData) => {
     password,
     storedOtp,
   ]);
-
-  await updateOtp(insertResult[0].id);
 
   return insertResult[0];
 };
@@ -129,7 +132,12 @@ export const updatePassword = async (userData) => {
     throw new UserNotFoundError();
   }
 
+  const userId = user.id;
+
+  const updatedOtp = await updateOtp(userId);
+
   if (user.otp !== otp) {
+    await sendPasswordResetEmail(user.email, user.username, updatedOtp);
     throw new OtpError();
   }
 
@@ -144,9 +152,6 @@ export const updatePassword = async (userData) => {
 
   const result = await executeQuery(query, [user.id, hashedPassword]);
 
-  const userId = user.id;
-
-  await updateOtp(userId);
   await resetLoginFails(userId);
   await unsuspendAccount(userId);
 
@@ -170,8 +175,15 @@ const updateOtp = async (userId) => {
     UPDATE users
     SET otp = $2
     WHERE id = $1
+    RETURNING otp
   `;
-  return await executeQuery(query, [userId, generateOTP()]);
+  const result = await executeQuery(query, [userId, generateOTP()]);
+
+  if (result.length === 0) {
+    throw new UserNotFoundError();
+  }
+
+  return result[0].otp;
 };
 
 const ensureUniqueUser = async (userData) => {

@@ -43,7 +43,7 @@ export class LogOutError extends AppError {
 }
 
 export class OtpError extends AppError {
-  constructor(message = "Verification code is incorrect") {
+  constructor(message = "Verification code is incorrect, a new one will be issued to your email") {
     super(message, 400);
   }
 }

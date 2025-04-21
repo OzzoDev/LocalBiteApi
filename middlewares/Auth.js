@@ -30,7 +30,7 @@ export const authenticate = async (req, _, next) => {
       next(new UserNotFoundError());
     }
 
-    if (!user.is_suspended) {
+    if (user.is_suspended) {
       next(new AccountSuspensionError());
     }
 

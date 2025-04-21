@@ -17,15 +17,12 @@ import { authenticate, ensureNotLoggedIn, ensureNotSuspended } from "../middlewa
 
 const router = express.Router();
 
+router.get("/password-reset-otp/:identifer", ensureNotLoggedIn, requestPasswordResetOtp);
+
+router.post("/signup", ensureNotLoggedIn, validateNewUser, signup);
+router.post("/signin", ensureNotLoggedIn, ensureNotSuspended, validateLoginAttempt, signin);
+router.post("/verify", ensureNotLoggedIn, ensureNotSuspended, validateUserVerification, verify);
 router.post("/signout", authenticate, signout);
-
-router.use("/", ensureNotLoggedIn, ensureNotSuspended);
-
-router.get("/password-reset-otp/:identifer", requestPasswordResetOtp);
-
-router.post("/signup", validateNewUser, signup);
-router.post("/signin", validateLoginAttempt, signin);
-router.post("/verify", validateUserVerification, verify);
-router.post("/reset-password", validatePasswordReset, resetPassword);
+router.post("/reset-password", ensureNotLoggedIn, validatePasswordReset, resetPassword);
 
 export default router;
