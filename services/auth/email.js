@@ -36,3 +36,11 @@ export const verifyEmail = async (recipientEmail, username, otp) => {
 
   await sendEmail(recipientEmail, subject, text, html);
 };
+
+export const sendPasswordResetEmail = async (recipientEmail, username, otp) => {
+  const subject = "Reset password";
+  const text = `Hi ${username}! Here is your verification code to reset your password and regain access to your account`;
+  const html = verifyEmailLayout(subject, text, otp);
+
+  await sendEmail(recipientEmail, subject, text, html);
+};
