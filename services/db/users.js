@@ -98,17 +98,21 @@ export const performLogin = async (userData) => {
     throw new UserNotFoundError();
   }
 
+  const userId = user.id;
+
   const isPasswordMatch = await bcrypt.compare(password, user.password);
   if (!isPasswordMatch) {
-    const failedLogins = await incrementLoginFails(user.id);
+    const failedLogins = await incrementLoginFails(userId);
 
     if (failedLogins > 5) {
-      //suspend account
+      await suspendAccount(userId);
       throw new AccountSuspensionError();
     }
 
     throw new PasswordError();
   }
+
+  await resetLoginFails(userId);
 
   const { password: _, ...authenticatedUser } = user;
   return authenticatedUser;
