@@ -9,6 +9,7 @@ import { serverSession } from "./middlewares/Session.js";
 import { authenticate } from "./middlewares/Auth.js";
 import "./config/mongodb.js";
 import "./config/postgres.js";
+import { errorHandler } from "./middlewares/ErrorHandler.js";
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -26,6 +27,8 @@ app.use("/api", authenticate, ApiRouter);
 app.get("/", (_, res) => {
   res.send("Welcome to the LocalBiteApi");
 });
+
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);

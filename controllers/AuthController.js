@@ -3,7 +3,7 @@ import { addUser, performLogin } from "../services/db/users.js";
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
-export const signup = async (req, res) => {
+export const signup = async (req, res, next) => {
   try {
     const newUser = await addUser(req.body);
 
@@ -19,12 +19,11 @@ export const signup = async (req, res) => {
       success: true,
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal server error", success: false });
+    next(error);
   }
 };
 
-export const signin = async (req, res) => {
+export const signin = async (req, res, next) => {
   try {
     const user = await performLogin(req.body);
 
@@ -37,8 +36,7 @@ export const signin = async (req, res) => {
       success: true,
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal server error", success: false });
+    next(error);
   }
 };
 
