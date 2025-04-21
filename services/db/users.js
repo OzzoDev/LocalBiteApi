@@ -100,6 +100,8 @@ export const performLogin = async (userData) => {
 
   const userId = user.id;
 
+  console.log(userId);
+
   const isPasswordMatch = await bcrypt.compare(password, user.password);
   if (!isPasswordMatch) {
     const failedLogins = await incrementLoginFails(userId);
@@ -170,13 +172,7 @@ const resetLoginFails = async (userId) => {
     WHERE id = $1
   `;
 
-  const result = await executeQuery(query, [userId]);
-
-  if (result.length === 0) {
-    throw new UserNotFoundError();
-  }
-
-  return 0;
+  return await executeQuery(query, [userId]);
 };
 
 const suspendAccount = async (userId) => {
@@ -186,13 +182,7 @@ const suspendAccount = async (userId) => {
     WHERE id = $1
   `;
 
-  const result = await executeQuery(query, [userId]);
-
-  if (result.length === 0) {
-    throw new UserNotFoundError();
-  }
-
-  return true;
+  return await executeQuery(query, [userId]);
 };
 
 const unsuspendAccount = async (userId) => {
@@ -202,11 +192,5 @@ const unsuspendAccount = async (userId) => {
     WHERE id = $1
   `;
 
-  const result = await executeQuery(query, [userId]);
-
-  if (result.length === 0) {
-    throw new UserNotFoundError();
-  }
-
-  return true;
+  return await executeQuery(query, [userId]);
 };
