@@ -100,8 +100,6 @@ export const performLogin = async (userData) => {
 
   const userId = user.id;
 
-  console.log(userId);
-
   const isPasswordMatch = await bcrypt.compare(password, user.password);
   if (!isPasswordMatch) {
     const failedLogins = await incrementLoginFails(userId);
@@ -118,6 +116,29 @@ export const performLogin = async (userData) => {
 
   const { password: _, ...authenticatedUser } = user;
   return authenticatedUser;
+};
+
+export const updatePassword = async (userData) => {
+  const { password } = userData;
+
+  const user = await findUser(userData);
+
+  if (!user) {
+    throw new UserNotFoundError();
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const query = `
+    UPDATE users
+    SET password = $2
+    WHERE id = $1
+    RETURNING id
+  `;
+
+  const result = await executeQuery(query, [user.id, hashedPassword]);
+
+  return result.length !== 0;
 };
 
 export const findUser = async (userData) => {
