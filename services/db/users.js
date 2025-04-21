@@ -6,6 +6,7 @@ import {
   OtpError,
   PasswordError,
   UserNotFoundError,
+  AccountSuspensionError,
 } from "../../errors/AuthErrors.js";
 import { generateOTP } from "../../utils/codes.js";
 
@@ -99,6 +100,13 @@ export const performLogin = async (userData) => {
 
   const isPasswordMatch = await bcrypt.compare(password, user.password);
   if (!isPasswordMatch) {
+    const failedLogins = await incrementLoginFails(user.id);
+
+    if (failedLogins > 5) {
+      //suspend account
+      throw new AccountSuspensionError();
+    }
+
     throw new PasswordError();
   }
 

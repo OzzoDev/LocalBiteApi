@@ -18,6 +18,12 @@ export class PasswordError extends AppError {
   }
 }
 
+export class AccountSuspensionError extends AppError {
+  constructor(message = "Account has been locked, reset password to regain access") {
+    super(message, 401);
+  }
+}
+
 export class SessionExpiredError extends AppError {
   constructor(message = "Your session has expired, log in to continue") {
     super(message, 403);
