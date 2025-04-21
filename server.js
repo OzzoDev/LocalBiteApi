@@ -9,7 +9,7 @@ import { serverSession } from "./middlewares/Session.js";
 import { authenticate } from "./middlewares/Auth.js";
 import "./config/mongodb.js";
 import "./config/postgres.js";
-import { errorHandler } from "./middlewares/ErrorHandler.js";
+import { errorHandler, notFoundHandler } from "./middlewares/ErrorHandler.js";
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -28,6 +28,7 @@ app.get("/", (_, res) => {
   res.send("Welcome to the LocalBiteApi");
 });
 
+app.use(notFoundHandler);
 app.use(errorHandler);
 
 app.listen(PORT, () => {
