@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { RequestBodyValidationError } from "../errors/ValidationErrors";
 
 const newUserSchema = z
   .object({
@@ -32,26 +33,28 @@ const loginAttemptSchema = z
     path: ["username"],
   });
 
-export const validateNewUser = (req, res, next) => {
+export const validateNewUser = (req, _, next) => {
   try {
     newUserSchema.parse(req.body);
     next();
   } catch (err) {
-    res.status(400).json({
-      message: err.errors.map((error) => error.message).join(", "),
-      success: false,
-    });
+    if (err instanceof z.ZodError) {
+      throw new RequestBodyValidationError(err.errors.map((error) => error.message).join(", "));
+    }
+
+    next(err);
   }
 };
 
-export const validateLoginAttempt = (req, res, next) => {
+export const validateLoginAttempt = (req, _, next) => {
   try {
     loginAttemptSchema.parse(req.body);
     next();
   } catch (err) {
-    res.status(400).json({
-      message: err.errors.map((error) => error.message).join(", "),
-      success: false,
-    });
+    if (err instanceof z.ZodError) {
+      throw new RequestBodyValidationError(err.errors.map((error) => error.message).join(", "));
+    }
+
+    next(err);
   }
 };
