@@ -6,7 +6,7 @@ import { corsOptions } from "./config/cors.js";
 import AuthRouter from "./routes/AuthRouter.js";
 import ApiRouter from "./routes/ApiRouter.js";
 import { serverSession } from "./middlewares/Session.js";
-import { authenticate } from "./middlewares/Auth.js";
+import { authenticate, ensureIsVerified } from "./middlewares/Auth.js";
 import "./config/mongodb.js";
 import "./config/postgres.js";
 import { errorHandler, notFoundHandler } from "./middlewares/ErrorHandler.js";
@@ -22,7 +22,7 @@ app.use(helmet());
 app.use(serverSession);
 
 app.use("/auth", AuthRouter);
-app.use("/api", authenticate, ApiRouter);
+app.use("/api", authenticate, ensureIsVerified, ApiRouter);
 
 app.get("/", (_, res) => {
   res.send("Welcome to the LocalBiteApi");

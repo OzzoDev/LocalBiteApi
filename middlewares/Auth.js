@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
-import { SessionExpiredError, UnauthticatedError } from "../errors/AuthErrors.js";
+import { IsVerifiedError, SessionExpiredError, UnauthticatedError } from "../errors/AuthErrors.js";
+import { findUser } from "../services/db/users.js";
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -17,12 +18,34 @@ export const authenticate = (req, _, next) => {
       throw new UnauthticatedError();
     }
 
+    req.user = decoded;
+
     next();
-  } catch (error) {
-    if (error instanceof jwt.JsonWebTokenError) {
-      throw new SessionExpiredError();
+  } catch (err) {
+    if (err instanceof jwt.JsonWebTokenError) {
+      next(new SessionExpiredError());
     }
 
-    next(error);
+    next(err);
+  }
+};
+
+export const ensureIsVerified = async (req, _, next) => {
+  try {
+    const userData = req.user;
+
+    if (!userData) {
+      return next(new UnauthticatedError());
+    }
+
+    const user = await findUser(userData);
+
+    if (!user) {
+      return next(new IsVerifiedError());
+    }
+
+    next();
+  } catch (err) {
+    next(err);
   }
 };

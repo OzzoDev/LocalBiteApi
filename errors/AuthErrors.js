@@ -41,3 +41,9 @@ export class OtpError extends AppError {
     super(message, 400);
   }
 }
+
+export class IsVerifiedError extends AppError {
+  constructor(message = "Unverified") {
+    super(message, 401);
+  }
+}

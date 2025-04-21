@@ -124,5 +124,5 @@ export const ensureUniqueUser = async (userData) => {
 `;
 
   const result = await executeQuery(query, [username, email]);
-  return !result[0];
+  return result.length === 0;
 };
