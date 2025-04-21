@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import { executeQuery } from "./init.js";
 import {
   DuplicateUserError,
+  IsAlreadyVerifiedError,
   OtpError,
   PasswordError,
   UserNotFoundError,
@@ -31,6 +32,12 @@ export const addUser = async (userData) => {
 
 export const verifyUser = async (userData) => {
   const { username, email, otp } = userData;
+
+  const existingVerifiedUser = findUser(userData);
+
+  if (existingVerifiedUser) {
+    throw new IsAlreadyVerifiedError();
+  }
 
   const findUserQuery = `
     SELECT username, email, password, otp

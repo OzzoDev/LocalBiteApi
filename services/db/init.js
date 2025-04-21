@@ -58,6 +58,9 @@ export async function ensureUnVerifiedUsersTable() {
     await executeQuery(usernameIndex);
     await executeQuery(emailIndex);
 
+    // await executeQuery("DROP TABLE unverified_users");
+    // await executeQuery("DROP TABLE users");
+
     console.log("✅ Unverified users table and indexes ensured.");
   } catch (err) {
     console.error("Error ensuring users table:", err);

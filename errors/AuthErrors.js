@@ -48,6 +48,12 @@ export class IsVerifiedError extends AppError {
   }
 }
 
+export class IsAlreadyVerifiedError extends AppError {
+  constructor(message = "Your account has already been verified") {
+    super(message, 400);
+  }
+}
+
 export class EmailError extends AppError {
   constructor(message = "Error sending email") {
     super(message, 500);
