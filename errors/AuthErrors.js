@@ -35,3 +35,9 @@ export class LogOutError extends AppError {
     super(message, 400);
   }
 }
+
+export class OtpError extends AppError {
+  constructor(message = "Verification code is incorrect") {
+    super(message, 400);
+  }
+}

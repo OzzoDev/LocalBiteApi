@@ -1,6 +1,11 @@
 import bcrypt from "bcryptjs";
 import { executeQuery } from "./init.js";
-import { DuplicateUserError, PasswordError, UserNotFoundError } from "../../errors/AuthErrors.js";
+import {
+  DuplicateUserError,
+  OtpError,
+  PasswordError,
+  UserNotFoundError,
+} from "../../errors/AuthErrors.js";
 import { generateOTP } from "../../utils/codes.js";
 
 export const addUser = async (userData) => {
@@ -16,12 +21,64 @@ export const addUser = async (userData) => {
 
   const otp = generateOTP();
 
-  const query = `INSERT INTO unverified_users (username,email,password,otp) values ($1, $2, $3, $4) RETURNING username, email`;
+  const query = `INSERT INTO unverified_users (username,email,password,otp) values ($1, $2, $3, $4) RETURNING id, username, email`;
   const values = [username, email, hashedPassword, otp];
 
   const result = await executeQuery(query, values);
 
   return result[0];
+};
+
+export const verifyUser = async (userData) => {
+  const { username, email, otp } = userData;
+
+  const findUserQuery = `
+    SELECT username, email, password, otp
+    FROM unverified_users
+    WHERE LOWER(username) = LOWER($1) OR LOWER(email) = LOWER($2)
+  `;
+
+  const userResult = await executeQuery(findUserQuery, [username, email]);
+
+  if (userResult.length === 0) {
+    throw new UserNotFoundError(
+      "Account not found. Please check the username or email and try again."
+    );
+  }
+
+  const {
+    username: verifiedUsername,
+    email: verifiedEmail,
+    password,
+    otp: storedOtp,
+  } = userResult[0];
+
+  if (storedOtp !== otp) {
+    throw new OtpError();
+  }
+
+  const deleteQuery = `
+    DELETE FROM unverified_users
+    WHERE LOWER(username) = LOWER($1) OR LOWER(email) = LOWER($2)
+    RETURNING username, email, password, otp
+  `;
+
+  await executeQuery(deleteQuery, [verifiedUsername, verifiedEmail]);
+
+  const insertQuery = `
+    INSERT INTO users (username, email, password, otp)
+    VALUES ($1, $2, $3, $4)
+    RETURNING id, username, email
+  `;
+
+  const insertResult = await executeQuery(insertQuery, [
+    verifiedUsername,
+    verifiedEmail,
+    password,
+    storedOtp,
+  ]);
+
+  return insertResult[0];
 };
 
 export const performLogin = async (userData) => {
