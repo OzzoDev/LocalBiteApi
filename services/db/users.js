@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs";
 import { executeQuery } from "./init.js";
+import { DuplicateUserError, PasswordError, UserNotFoundError } from "../../errors/AuthErrors.js";
 
 export const addUser = async (userData) => {
   const { username, email, password } = userData;
@@ -7,7 +8,7 @@ export const addUser = async (userData) => {
   const isUniqueUser = await ensureUniqueUser(userData);
 
   if (!isUniqueUser) {
-    throw new Error("Username or email already exists");
+    throw new DuplicateUserError();
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -26,12 +27,12 @@ export const performLogin = async (userData) => {
   const user = await findUser(userData);
 
   if (!user) {
-    throw new Error("User not found");
+    throw new UserNotFoundError();
   }
 
   const isPasswordMatch = await bcrypt.compare(password, user.password);
   if (!isPasswordMatch) {
-    throw new Error("Incorrect password");
+    throw new PasswordError();
   }
 
   const { password: _, ...authenticatedUser } = user;
