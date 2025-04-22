@@ -77,3 +77,9 @@ export class TooManyLoginsError extends AppError {
     super(message, 429);
   }
 }
+
+export class TooPasswordResetAttemptsError extends AppError {
+  constructor(message = "Too many attempts to reset password, try again in 5 minutes") {
+    super(message, 429);
+  }
+}

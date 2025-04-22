@@ -5,6 +5,7 @@ import {
   SessionExpiredError,
   UnauthticatedError,
   AccountSuspensionError,
+  UserNotFoundError,
 } from "../errors/AuthErrors.js";
 import { findUser } from "../services/db/users.js";
 
@@ -24,14 +25,16 @@ export const authenticate = async (req, _, next) => {
       return next(new UnauthticatedError());
     }
 
+    console.log(decoded);
+
     const user = await findUser(decoded);
 
     if (!user) {
-      next(new UserNotFoundError());
+      return next(new UserNotFoundError());
     }
 
     if (user.is_suspended) {
-      next(new AccountSuspensionError());
+      return next(new AccountSuspensionError());
     }
 
     req.user = decoded;
@@ -81,7 +84,7 @@ export const ensureNotSuspended = async (req, _, next) => {
     const user = await findUser(req.body);
 
     if (!user) {
-      next();
+      return next();
     }
 
     if (user.is_suspended) {

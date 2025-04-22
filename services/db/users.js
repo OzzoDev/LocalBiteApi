@@ -49,6 +49,8 @@ export const verifyUser = async (userData) => {
 
   const userResult = await executeQuery(findUserQuery, [username, email]);
 
+  console.log(userResult);
+
   if (userResult.length === 0) {
     throw new UserNotFoundError(
       "Account not found. Please check the username or email and try again."
@@ -63,7 +65,7 @@ export const verifyUser = async (userData) => {
     otp: storedOtp,
   } = userResult[0];
 
-  const updatedOtp = await updateOtp(id);
+  const updatedOtp = await updateOtp(id, "unverified_users");
 
   if (storedOtp !== otp) {
     await verifyEmail(verifiedEmail, verifiedUsername, updatedOtp);
@@ -170,14 +172,16 @@ export const findUser = async (userData) => {
   return result[0];
 };
 
-const updateOtp = async (userId) => {
+const updateOtp = async (userId, table = "users") => {
   const query = `
-    UPDATE users
+    UPDATE ${table}
     SET otp = $2
     WHERE id = $1
     RETURNING otp
   `;
   const result = await executeQuery(query, [userId, generateOTP()]);
+
+  console.log("res: ", result);
 
   if (result.length === 0) {
     throw new UserNotFoundError();
