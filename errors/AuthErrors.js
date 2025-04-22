@@ -71,3 +71,9 @@ export class IsLoggedInError extends AppError {
     super(message, 400);
   }
 }
+
+export class TooManyLoginsError extends AppError {
+  constructor(message = "Too many login attempts, try again in 5 minutes") {
+    super(message, 429);
+  }
+}
