@@ -93,3 +93,23 @@ export const ensureNotSuspended = async (req, _, next) => {
     next(err);
   }
 };
+
+export const rotateSession = (req, _, next) => {
+  if (!req.session) {
+    return next();
+  }
+
+  const oldJwt = req.session.jwt;
+
+  req.session.regenerate((err) => {
+    if (err) {
+      return next();
+    }
+
+    if (oldJwt) {
+      req.session.jwt = oldJwt;
+    }
+
+    next();
+  });
+};
