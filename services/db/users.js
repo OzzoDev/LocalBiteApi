@@ -7,6 +7,7 @@ import {
   PasswordError,
   UserNotFoundError,
   AccountSuspensionError,
+  DeleteUserError,
 } from "../../errors/AuthErrors.js";
 import { generateOTP } from "../../utils/codes.js";
 import { sendPasswordResetEmail, verifyEmail } from "../auth/email.js";
@@ -185,6 +186,34 @@ export const invalidateTokens = async (userId) => {
   }
 
   return result[0].jwt_version;
+};
+
+export const deleteUser = async (userId, deleteCommand) => {
+  const findQuery = `
+    SELECT username
+    FROM users
+    WHERE id = $1
+  `;
+
+  const findResult = await executeQuery(findQuery, [userId]);
+
+  if (findResult.length === 0) {
+    throw new UserNotFoundError();
+  }
+
+  const username = findResult[0].username;
+  const [key, commandUsername] = deleteCommand.split(" ");
+
+  if (key.toLowerCase() !== "delete" || commandUsername.toLowerCase() !== username.toLowerCase()) {
+    throw new DeleteUserError();
+  }
+
+  const deleteQuery = `
+    DELETE FROM users
+    WHERE id = $1
+  `;
+
+  await executeQuery(deleteQuery, [userId]);
 };
 
 const updateOtp = async (userId, table = "users") => {

@@ -89,3 +89,9 @@ export class JwtVersionError extends AppError {
     super(message, 401);
   }
 }
+
+export class DeleteUserError extends AppError {
+  constructor(message = "Error deleting account") {
+    super(message, 400);
+  }
+}
