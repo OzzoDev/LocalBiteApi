@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import { corsOptions } from "./config/cors.js";
 import AuthRouter from "./routes/AuthRouter.js";
 import ApiRouter from "./routes/ApiRouter.js";
+import BusinessOwnerRouter from "./routes/BusinessOwnerRouter.js";
 import { serverSession, rotateSession } from "./middlewares/Session.js";
 import { authenticate, ensureIsVerified } from "./middlewares/Auth.js";
 import "./config/mongodb.js";
@@ -24,6 +25,7 @@ app.use(rotateSession);
 
 app.use("/auth", AuthRouter);
 app.use("/api", authenticate, ensureIsVerified, ApiRouter);
+app.use("/owner", authenticate, ensureIsVerified, BusinessOwnerRouter);
 
 app.get("/", (_, res) => {
   res.send("Welcome to the LocalBiteApi");
