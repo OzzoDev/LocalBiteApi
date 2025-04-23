@@ -1,10 +1,11 @@
 import jwt from "jsonwebtoken";
-import { invalidateTokens } from "../db/users.js";
+import { findUser, invalidateTokens } from "../db/users.js";
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
 const signJwt = async (userData) => {
-  const { username, email, id } = userData;
+  const user = await findUser(userData);
+  const { username, email, id } = user;
 
   const newJwtVersion = await invalidateTokens(id);
 

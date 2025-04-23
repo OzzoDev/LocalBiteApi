@@ -96,7 +96,7 @@ export const resetPassword = async (req, res, next) => {
     const resettedSuccessfully = await updatePassword(userData);
 
     if (resettedSuccessfully) {
-      signAndStroreJwt(userData, req);
+      await signAndStroreJwt(userData, req);
     }
 
     res.status(200).json({ message: "Password resetted successfully", success: true });

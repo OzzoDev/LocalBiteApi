@@ -196,8 +196,6 @@ const updateOtp = async (userId, table = "users") => {
   `;
   const result = await executeQuery(query, [userId, generateOTP()]);
 
-  console.log("res: ", result);
-
   if (result.length === 0) {
     throw new UserNotFoundError();
   }
