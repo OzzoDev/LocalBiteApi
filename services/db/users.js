@@ -188,7 +188,7 @@ export const invalidateTokens = async (userId) => {
   return result[0].jwt_version;
 };
 
-export const deleteUser = async (userId, deleteCommand) => {
+export const deleteUser = async (userId, deleteCommand = "") => {
   const findQuery = `
     SELECT username
     FROM users

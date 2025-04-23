@@ -4,8 +4,9 @@ import {
   verifyUser,
   updatePassword,
   findUser,
+  deleteUser,
 } from "../services/db/users.js";
-import { LogOutError, UserNotFoundError } from "../errors/AuthErrors.js";
+import { DeleteUserError, LogOutError, UserNotFoundError } from "../errors/AuthErrors.js";
 import { signAndStroreJwt } from "../services/auth/jwt.js";
 import { verifyEmail, sendPasswordResetEmail } from "../services/auth/email.js";
 import { resetLoginRateLimit, resetPasswordResetRateLimit } from "../middlewares/RateLimiters.js";
@@ -114,4 +115,29 @@ export const signout = (req, res) => {
     }
     res.status(200).json({ message: "Logged out successfully", success: true });
   });
+};
+
+export const deleteAccount = async (req, res, next) => {
+  const { deletecommand: deleteCommand } = req.params;
+  const { id: userId } = req.user;
+
+  try {
+    await deleteUser(userId, deleteCommand);
+
+    res.clearCookie("connect.sid", {
+      path: "/",
+      httpOnly: true,
+      secure: isProd,
+      sameSite: "Strict",
+    });
+
+    req.session.destroy((err) => {
+      if (err) {
+        throw new DeleteUserError();
+      }
+      res.status(200).json({ message: "Account deleted successfully", success: true });
+    });
+  } catch (err) {
+    next(err);
+  }
 };

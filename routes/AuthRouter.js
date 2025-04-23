@@ -6,6 +6,7 @@ import {
   verify,
   requestPasswordResetOtp,
   resetPassword,
+  deleteAccount,
 } from "../controllers/AuthController.js";
 import {
   validateLoginAttempt,
@@ -21,6 +22,7 @@ const router = express.Router();
 router.get("/password-reset-otp/:identifer", ensureNotLoggedIn, requestPasswordResetOtp);
 
 router.post("/signup", ensureNotLoggedIn, validateNewUser, signup);
+
 router.post(
   "/signin",
   loginRateLimiter,
@@ -29,8 +31,11 @@ router.post(
   validateLoginAttempt,
   signin
 );
+
 router.post("/verify", ensureNotLoggedIn, ensureNotSuspended, validateUserVerification, verify);
+
 router.post("/signout", authenticate, signout);
+
 router.post(
   "/reset-password",
   resetPasswordRateLimiter,
@@ -38,5 +43,7 @@ router.post(
   validatePasswordReset,
   resetPassword
 );
+
+router.delete("/delete-account/:deletecommand", authenticate, deleteAccount);
 
 export default router;
