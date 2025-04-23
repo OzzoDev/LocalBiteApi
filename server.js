@@ -22,6 +22,17 @@ app.use(helmet());
 app.use(serverSession);
 app.use(rotateSession);
 
+// app.use("/", (req, res, next) => {
+//   req.session.destroy((err) => {
+//     if (err) {
+//       throw new LogOutError();
+//     }
+//     res.status(200).json({ message: "Logged out successfully", success: true });
+//   });
+
+//   next();
+// });
+
 app.use("/auth", AuthRouter);
 app.use("/api", authenticate, ensureIsVerified, ApiRouter);
 

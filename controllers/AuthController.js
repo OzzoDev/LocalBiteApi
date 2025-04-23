@@ -33,7 +33,7 @@ export const signin = async (req, res, next) => {
   try {
     const user = await performLogin(req.body);
 
-    signAndStroreJwt(user, req);
+    await signAndStroreJwt(user, req);
 
     res.status(200).json({
       message: "Logged in successfully",
