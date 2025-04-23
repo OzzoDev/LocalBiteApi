@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { invalidateTokens } from "../db/users";
+import { invalidateTokens } from "../db/users.js";
 
 const JWT_SECRET = process.env.JWT_SECRET;
 

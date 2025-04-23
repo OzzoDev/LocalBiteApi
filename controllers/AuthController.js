@@ -48,7 +48,7 @@ export const verify = async (req, res, next) => {
   try {
     const user = await verifyUser(req.body);
 
-    signAndStroreJwt(user, req);
+    await signAndStroreJwt(user, req);
 
     res.status(201).json({
       user,
