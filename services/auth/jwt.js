@@ -1,18 +1,21 @@
 import jwt from "jsonwebtoken";
+import { invalidateTokens } from "../db/users";
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
-const signJwt = (data) => {
-  const { username, email, id } = data;
+const signJwt = async (userData) => {
+  const { username, email, id } = userData;
 
-  const token = jwt.sign({ username, email, id }, JWT_SECRET, {
+  const newJwtVersion = await invalidateTokens(id);
+
+  const token = jwt.sign({ username, email, id, version: newJwtVersion }, JWT_SECRET, {
     expiresIn: "1y",
   });
 
   return token;
 };
 
-export const setJwt = (data, req) => {
-  const token = signJwt(data);
+export const signAndStroreJwt = async (userData, req) => {
+  const token = await signJwt(userData);
   req.session.jwt = token;
 };

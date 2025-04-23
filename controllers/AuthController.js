@@ -6,7 +6,7 @@ import {
   findUser,
 } from "../services/db/users.js";
 import { LogOutError, UserNotFoundError } from "../errors/AuthErrors.js";
-import { setJwt } from "../services/auth/jwt.js";
+import { signAndStroreJwt } from "../services/auth/jwt.js";
 import { verifyEmail, sendPasswordResetEmail } from "../services/auth/email.js";
 
 export const signup = async (req, res, next) => {
@@ -33,7 +33,7 @@ export const signin = async (req, res, next) => {
   try {
     const user = await performLogin(req.body);
 
-    setJwt(user, req);
+    signAndStroreJwt(user, req);
 
     res.status(200).json({
       message: "Logged in successfully",
@@ -48,7 +48,7 @@ export const verify = async (req, res, next) => {
   try {
     const user = await verifyUser(req.body);
 
-    setJwt(user, req);
+    signAndStroreJwt(user, req);
 
     res.status(201).json({
       user,
@@ -96,7 +96,7 @@ export const resetPassword = async (req, res, next) => {
     const resettedSuccessfully = await updatePassword(userData);
 
     if (resettedSuccessfully) {
-      setJwt(userData, req);
+      signAndStroreJwt(userData, req);
     }
 
     res.status(200).json({ message: "Password resetted successfully", success: true });
