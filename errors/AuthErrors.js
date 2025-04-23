@@ -83,3 +83,9 @@ export class TooPasswordResetAttemptsError extends AppError {
     super(message, 429);
   }
 }
+
+export class JwtVersionError extends AppError {
+  constructor(message = "Token has been invalidated") {
+    super(message, 401);
+  }
+}

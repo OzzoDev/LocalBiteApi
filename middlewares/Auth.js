@@ -6,6 +6,7 @@ import {
   UnauthticatedError,
   AccountSuspensionError,
   UserNotFoundError,
+  JwtVersionError,
 } from "../errors/AuthErrors.js";
 import { findUser } from "../services/db/users.js";
 
@@ -25,12 +26,14 @@ export const authenticate = async (req, _, next) => {
       return next(new UnauthticatedError());
     }
 
-    console.log(decoded);
-
     const user = await findUser(decoded);
 
     if (!user) {
       return next(new UserNotFoundError());
+    }
+
+    if (decoded.version !== user.jwt_version) {
+      return next(new JwtVersionError());
     }
 
     if (user.is_suspended) {
