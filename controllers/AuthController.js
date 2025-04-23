@@ -8,6 +8,9 @@ import {
 import { LogOutError, UserNotFoundError } from "../errors/AuthErrors.js";
 import { signAndStroreJwt } from "../services/auth/jwt.js";
 import { verifyEmail, sendPasswordResetEmail } from "../services/auth/email.js";
+import { resetLoginRateLimit, resetPasswordResetRateLimit } from "../middlewares/RateLimiters.js";
+
+const isProd = process.env.NODE_ENV === "production";
 
 export const signup = async (req, res, next) => {
   try {
@@ -35,6 +38,8 @@ export const signin = async (req, res, next) => {
 
     await signAndStroreJwt(user, req);
 
+    resetPasswordResetRateLimit(req.ip);
+
     res.status(200).json({
       message: "Logged in successfully",
       success: true,
@@ -58,15 +63,6 @@ export const verify = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-};
-
-export const signout = (req, res) => {
-  req.session.destroy((err) => {
-    if (err) {
-      throw new LogOutError();
-    }
-    res.status(200).json({ message: "Logged out successfully", success: true });
-  });
 };
 
 export const requestPasswordResetOtp = async (req, res, next) => {
@@ -93,14 +89,29 @@ export const resetPassword = async (req, res, next) => {
   const userData = req.body;
 
   try {
-    const resettedSuccessfully = await updatePassword(userData);
+    await updatePassword(userData);
 
-    if (resettedSuccessfully) {
-      await signAndStroreJwt(userData, req);
-    }
+    await signAndStroreJwt(userData, req);
+    resetLoginRateLimit(req.ip);
 
     res.status(200).json({ message: "Password resetted successfully", success: true });
   } catch (err) {
     next(err);
   }
+};
+
+export const signout = (req, res) => {
+  res.clearCookie("connect.sid", {
+    path: "/",
+    httpOnly: true,
+    secure: isProd,
+    sameSite: "Strict",
+  });
+
+  req.session.destroy((err) => {
+    if (err) {
+      throw new LogOutError();
+    }
+    res.status(200).json({ message: "Logged out successfully", success: true });
+  });
 };

@@ -8,7 +8,7 @@ const isProd = process.env.NODE_ENV === "production";
 export const serverSession = session({
   secret: SESSION_KEY,
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
   store: MongoStore.create({
     mongoUrl: MONGO_URI,
     ttl: 365 * 24 * 60 * 60,
@@ -20,3 +20,23 @@ export const serverSession = session({
     sameSite: "Strict",
   },
 });
+
+export const rotateSession = (req, _, next) => {
+  if (!req.session || !req.session.jwt) {
+    return next();
+  }
+
+  const oldJwt = req.session.jwt;
+
+  req.session.regenerate((err) => {
+    if (err) {
+      return next();
+    }
+
+    if (oldJwt) {
+      req.session.jwt = oldJwt;
+    }
+
+    next();
+  });
+};

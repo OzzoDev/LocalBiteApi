@@ -29,10 +29,6 @@ export async function ensureUsersTable() {
     await executeQuery(usernameIndex);
     await executeQuery(emailIndex);
 
-    const users = await executeQuery("SELECT * FROM users");
-
-    console.log(users);
-
     console.log("✅ Users table and indexes ensured.");
   } catch (err) {
     console.error("Error ensuring users table:", err);

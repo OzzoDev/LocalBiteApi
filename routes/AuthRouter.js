@@ -33,7 +33,7 @@ router.post("/verify", ensureNotLoggedIn, ensureNotSuspended, validateUserVerifi
 router.post("/signout", authenticate, signout);
 router.post(
   "/reset-password",
-  // resetPasswordRateLimiter,
+  resetPasswordRateLimiter,
   ensureNotLoggedIn,
   validatePasswordReset,
   resetPassword
