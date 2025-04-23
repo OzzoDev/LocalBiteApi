@@ -12,6 +12,7 @@ export async function ensureUsersTable() {
         is_suspended BOOLEAN DEFAULT FALSE,
         otp VARCHAR(8) NOT NULL, 
         login_fails INT DEFAULT 0,
+        jwt_version INT DEFAULT 0,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
   `;

@@ -49,8 +49,6 @@ export const verifyUser = async (userData) => {
 
   const userResult = await executeQuery(findUserQuery, [username, email]);
 
-  console.log(userResult);
-
   if (userResult.length === 0) {
     throw new UserNotFoundError(
       "Account not found. Please check the username or email and try again."
@@ -170,6 +168,23 @@ export const findUser = async (userData) => {
 
   const result = await executeQuery(query, [username, email]);
   return result[0];
+};
+
+export const invalidateTokens = async (userId) => {
+  const query = `
+    UPDATE users
+    SET jwt_version = jwt_version
+    WHERE id = $1
+    RETURNING jwt_version
+  `;
+
+  const result = await executeQuery(query, [userId]);
+
+  if (result.length === 0) {
+    throw new UserNotFoundError();
+  }
+
+  return result[0].jwt_version;
 };
 
 const updateOtp = async (userId, table = "users") => {
