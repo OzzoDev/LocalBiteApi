@@ -9,6 +9,7 @@ export async function ensureUsersTable() {
         username VARCHAR(100) NOT NULL,
         email VARCHAR(255) NOT NULL,
         password VARCHAR(255) NOT NULL,
+        role VARCHAR(50) DEFAULT 'user' NOT NULL,
         is_suspended BOOLEAN DEFAULT FALSE,
         otp VARCHAR(8) NOT NULL, 
         login_fails INT DEFAULT 0,
