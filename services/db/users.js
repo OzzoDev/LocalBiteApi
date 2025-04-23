@@ -173,7 +173,7 @@ export const findUser = async (userData) => {
 export const invalidateTokens = async (userId) => {
   const query = `
     UPDATE users
-    SET jwt_version = jwt_version
+    SET jwt_version = jwt_version + 1
     WHERE id = $1
     RETURNING jwt_version
   `;
