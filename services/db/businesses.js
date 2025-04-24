@@ -125,7 +125,7 @@ export const findDish = async (dishId) => {
 
 export const findDishes = async () => {
   const query = `
-    ELECT dish_name, description, price FROM dishes
+    SELECT dish_name, description, price FROM dishes
   `;
 
   return await executeQuery(query);

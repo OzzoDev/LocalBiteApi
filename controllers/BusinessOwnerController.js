@@ -1,4 +1,10 @@
-import { addBusiness, addDish, deleteDish, updateDish } from "../services/db/businesses.js";
+import {
+  addBusiness,
+  addDish,
+  deleteDish,
+  findDish,
+  updateDish,
+} from "../services/db/businesses.js";
 
 export const registerBusiness = async (req, res, next) => {
   const businessData = { ...req.body, ownerId: req.user.id };
@@ -9,6 +15,15 @@ export const registerBusiness = async (req, res, next) => {
     res
       .status(201)
       .json({ message: `${req.body.businessName} registered successfuly`, success: true });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getDish = async (req, res, next) => {
+  try {
+    const dish = await findDish(req.params.dishid);
+    res.status(200).json({ dish, success: true });
   } catch (err) {
     next(err);
   }
