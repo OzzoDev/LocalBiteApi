@@ -1,4 +1,5 @@
-import { BusinessNotFoundError } from "../../errors/BusinessOwnerError.js";
+import { parentPort } from "worker_threads";
+import { BusinessNotFoundError, NotOwnerError } from "../../errors/BusinessOwnerError.js";
 import { executeQuery } from "./init.js";
 
 export const addBusiness = async (data) => {
@@ -44,6 +45,23 @@ export const addDish = async (data) => {
   const result = await executeQuery(query, [dishName, description, price, businessId]);
 
   return result;
+};
+
+export const deleteDish = async (data) => {
+  const { ownerId, businessId, dishId } = data;
+
+  const business = await findBusiness(businessId);
+
+  if (business.owner_id !== parseInt(ownerId, 10)) {
+    throw new NotOwnerError();
+  }
+
+  const query = `
+    DELTE FROM dishes
+    WHERE business_id = $1 AND id = $2
+   `;
+
+  return await executeQuery(query, [parseInt(businessId, 10), parentPort(dishId, 10)]);
 };
 
 export const findBusiness = async (businessId) => {
