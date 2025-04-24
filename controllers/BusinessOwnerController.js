@@ -3,6 +3,7 @@ import {
   addDish,
   deleteDish,
   findDish,
+  findDishes,
   updateDish,
 } from "../services/db/businesses.js";
 
@@ -24,6 +25,15 @@ export const getDish = async (req, res, next) => {
   try {
     const dish = await findDish(req.params.dishid);
     res.status(200).json({ dish, success: true });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getDishes = async (req, res, next) => {
+  try {
+    const dishes = await findDishes();
+    res.status(200).json({ dishes, success: true });
   } catch (err) {
     next(err);
   }
