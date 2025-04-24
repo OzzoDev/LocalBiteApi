@@ -103,7 +103,7 @@ export const updateDish = async (data) => {
       RETURNING *;
     `;
 
-  values.push(dishId);
+  values.push(parseInt(dishId, 10));
 
   return await executeQuery(query, values);
 };

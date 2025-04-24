@@ -1,4 +1,4 @@
-import { addBusiness, addDish, deleteDish } from "../services/db/businesses.js";
+import { addBusiness, addDish, deleteDish, updateDish } from "../services/db/businesses.js";
 
 export const registerBusiness = async (req, res, next) => {
   const businessData = { ...req.body, ownerId: req.user.id };
@@ -34,6 +34,19 @@ export const removeDish = async (req, res, next) => {
     await deleteDish({ businessId, dishId, ownerId });
 
     res.status(200).json({ message: `Dish with id ${dishId} deleted successfuly`, success: true });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const alterDish = async (req, res, next) => {
+  const { businessid: businessId, dishid: dishId } = req.params;
+  const { id: ownerId } = req.user;
+
+  try {
+    await updateDish({ businessId, dishId, ownerId, ...req.body });
+
+    res.status(200).json({ message: `Dish with id ${dishId} updated successfuly`, success: true });
   } catch (err) {
     next(err);
   }
