@@ -123,6 +123,14 @@ export const findDish = async (dishId) => {
   return result;
 };
 
+export const findDishes = async () => {
+  const query = `
+    ELECT dish_name, description, price FROM dishes
+  `;
+
+  return await executeQuery(query);
+};
+
 export const findBusiness = async (businessId) => {
   const query = `
         SELECT * FROM businesses
