@@ -86,7 +86,7 @@ export async function ensureBusinessTable() {
 `;
 
     const businessNameIndex = `
-      CREATE UNIQUE INDEX IF NOT EXISTS idx_businesses_business_lower ON users (LOWER(business_name));
+      CREATE UNIQUE INDEX IF NOT EXISTS idx_businesses_business_name_lower ON businesses (LOWER(business_name));
     `;
 
     await executeQuery(tableQuery);
