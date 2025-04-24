@@ -2,6 +2,8 @@ import {
   addBusiness,
   addDish,
   deleteDish,
+  findBusinessDish,
+  findBusinessDishes,
   findDish,
   findDishes,
   updateDish,
@@ -22,17 +24,27 @@ export const registerBusiness = async (req, res, next) => {
 };
 
 export const getDish = async (req, res, next) => {
+  const { businessid: businessId, dishid: dishId } = req.params;
+  const { id: ownerId } = req.user;
+
   try {
-    const dish = await findDish(req.params.dishid);
-    res.status(200).json({ dish, success: true });
+    const dish = await findBusinessDish({ businessId, dishId, ownerId });
+
+    res.status(200).json({
+      dish: { dish_name: dish.dish_name, description: dish.description, price: dish.price },
+      success: true,
+    });
   } catch (err) {
     next(err);
   }
 };
 
 export const getDishes = async (req, res, next) => {
+  const { businessid: businessId } = req.params;
+  const { id: ownerId } = req.user;
+
   try {
-    const dishes = await findDishes();
+    const dishes = await findBusinessDishes({ businessId, ownerId });
     res.status(200).json({ dishes, success: true });
   } catch (err) {
     next(err);

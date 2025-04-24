@@ -120,22 +120,61 @@ export const findDish = async (dishId) => {
     throw new DishNotFoundError();
   }
 
-  return result;
+  return result[0];
+};
+
+export const findBusinessDish = async (data) => {
+  const { businessId, dishId, ownerId } = data;
+
+  const business = await findBusiness(businessId);
+
+  if (business.owner_id !== parseInt(ownerId, 10)) {
+    throw new NotOwnerError();
+  }
+
+  const query = `
+      SELECT * FROM dishes
+      WHERE business_id = $1 AND id = $2
+    `;
+
+  const result = await executeQuery(query, [parseInt(businessId, 10), parseInt(dishId, 10)]);
+
+  if (result.length === 0) {
+    throw new DishNotFoundError();
+  }
+
+  return result[0];
 };
 
 export const findDishes = async () => {
   const query = `
-    SELECT dish_name, description, price FROM dishes
+    SELECT id, dish_name, description, price FROM dishes
   `;
 
   return await executeQuery(query);
 };
 
+export const findBusinessDishes = async (data) => {
+  const { businessId, ownerId } = data;
+
+  const business = await findBusiness(businessId);
+  if (business.owner_id !== parseInt(ownerId, 10)) {
+    throw new NotOwnerError();
+  }
+
+  const query = `
+    SELECT id, dish_name, description, price FROM dishes
+    WHERE business_id = $1
+  `;
+
+  return await executeQuery(query, [parseInt(businessId, 10)]);
+};
+
 export const findBusiness = async (businessId) => {
   const query = `
-        SELECT * FROM businesses
-        WHERE id = $1
-    `;
+    SELECT * FROM businesses
+    WHERE id = $1
+  `;
 
   const result = await executeQuery(query, [parseInt(businessId, 10)]);
 

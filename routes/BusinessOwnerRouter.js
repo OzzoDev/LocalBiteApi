@@ -2,6 +2,8 @@ import express from "express";
 import {
   alterDish,
   appendDish,
+  getDish,
+  getDishes,
   registerBusiness,
   removeDish,
 } from "../controllers/BusinessOwnerController.js";
@@ -15,10 +17,14 @@ const router = express.Router();
 
 router.post("/register", validateBusinessBody, registerBusiness);
 
-router.post("/dish/:businessid", validateDishBody, appendDish);
+router.get("/dishes/:businessid", getDishes);
 
-router.patch("/dish/:businessid/:dishid", validateDishUpdateBody, alterDish);
+router.get("/dishes/:businessid/:dishid", getDish);
 
-router.delete("/dish/:businessid/:dishid", removeDish);
+router.post("/dishes/:businessid", validateDishBody, appendDish);
+
+router.patch("/dishes/:businessid/:dishid", validateDishUpdateBody, alterDish);
+
+router.delete("/dishes/:businessid/:dishid", removeDish);
 
 export default router;
