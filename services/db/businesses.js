@@ -48,7 +48,7 @@ export const addDish = async (data) => {
 };
 
 export const deleteDish = async (data) => {
-  const { ownerId, businessId, dishId } = data;
+  const { businessId, dishId, ownerId } = data;
 
   const business = await findBusiness(businessId);
 
@@ -57,11 +57,11 @@ export const deleteDish = async (data) => {
   }
 
   const query = `
-    DELTE FROM dishes
+    DELETE FROM dishes
     WHERE business_id = $1 AND id = $2
    `;
 
-  return await executeQuery(query, [parseInt(businessId, 10), parentPort(dishId, 10)]);
+  return await executeQuery(query, [parseInt(businessId, 10), parseInt(dishId, 10)]);
 };
 
 export const findBusiness = async (businessId) => {
