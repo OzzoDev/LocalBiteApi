@@ -70,27 +70,23 @@ export async function ensureUnVerifiedUsersTable() {
 export async function ensureBusinessTable() {
   try {
     const tableQuery = `
-    CREATE TABLE IF NOT EXISTS businesses (
-      id BIGSERIAL PRIMARY KEY,
-      owner_id INT NOT NULL, 
-      business_name VARCHAR(100) NOT NULL,
-      country VARCHAR(100) NOT NULL, 
-      city VARCHAR(100) NOT NULL, 
-      address VARCHAR(255) NOT NULL, 
-      zipCode VARCHAR(20) NOT NULL, 
-      business_phone VARCHAR(15) NOT NULL,
-      business_website VARCHAR(100),
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE
-  );
-`;
-
-    const businessNameIndex = `
-      CREATE UNIQUE INDEX IF NOT EXISTS idx_businesses_business_name_lower ON businesses (LOWER(business_name));
-    `;
+      CREATE TABLE IF NOT EXISTS businesses (
+        id BIGSERIAL PRIMARY KEY,
+        owner_id INT NOT NULL, 
+        business_name VARCHAR(100) NOT NULL,
+        country VARCHAR(100) NOT NULL, 
+        city VARCHAR(100) NOT NULL, 
+        address VARCHAR(255) NOT NULL, 
+        zip_code VARCHAR(20) NOT NULL, 
+        business_phone VARCHAR(15) NOT NULL,
+        business_website VARCHAR(100),
+        is_verified BOOLEAN DEFAULT false,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE
+    );
+  `;
 
     await executeQuery(tableQuery);
-    await executeQuery(businessNameIndex);
 
     console.log("✅ Business table table and indexes ensured.");
   } catch (err) {

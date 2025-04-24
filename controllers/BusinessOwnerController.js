@@ -1,21 +1,14 @@
-import { BusinessEmailError } from "../errors/BusinessOwnerError.js";
-import { isCloseMatch } from "../utils/utils.js";
+import { addBusiness } from "../services/db/businesses.js";
 
 export const registerBusiness = async (req, res, next) => {
-  const { email } = req.user;
-  const { country, city, address, zipCode, businessName } = req.body;
-
   try {
-    const isBusinessOwner = isCloseMatch(
-      businessName,
-      email ? email.split("@")[1].split(".")[0] : ""
-    );
+    const businessData = { ...req.body, ownerId: req.user.id };
 
-    if (!isBusinessOwner) {
-      throw new BusinessEmailError();
-    }
+    await addBusiness(businessData);
 
-    res.status(201).json({ message: `${businessName} registered successfuly`, success: true });
+    res
+      .status(201)
+      .json({ message: `${req.body.businessName} registered successfuly`, success: true });
   } catch (err) {
     next(err);
   }
