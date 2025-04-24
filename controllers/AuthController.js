@@ -7,7 +7,7 @@ import {
   deleteUser,
 } from "../services/db/users.js";
 import { DeleteUserError, LogOutError, UserNotFoundError } from "../errors/AuthErrors.js";
-import { signAndStroreJwt } from "../services/auth/jwt.js";
+import { signAndStoreJwt } from "../services/auth/jwt.js";
 import { verifyEmail, sendPasswordResetEmail } from "../services/auth/email.js";
 import { resetLoginRateLimit, resetPasswordResetRateLimit } from "../middlewares/RateLimiters.js";
 
@@ -37,7 +37,7 @@ export const signin = async (req, res, next) => {
   try {
     const user = await performLogin(req.body);
 
-    await signAndStroreJwt(user, req);
+    await signAndStoreJwt(user, req);
 
     resetPasswordResetRateLimit(req.ip);
 
@@ -54,7 +54,7 @@ export const verify = async (req, res, next) => {
   try {
     const user = await verifyUser(req.body);
 
-    await signAndStroreJwt(user, req);
+    await signAndStoreJwt(user, req);
 
     res.status(201).json({
       user,
@@ -92,7 +92,7 @@ export const resetPassword = async (req, res, next) => {
   try {
     await updatePassword(userData);
 
-    await signAndStroreJwt(userData, req);
+    await signAndStoreJwt(userData, req);
     resetLoginRateLimit(req.ip);
 
     res.status(200).json({ message: "Password resetted successfully", success: true });

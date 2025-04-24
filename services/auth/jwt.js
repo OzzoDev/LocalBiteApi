@@ -16,7 +16,7 @@ const signJwt = async (userData) => {
   return token;
 };
 
-export const signAndStroreJwt = async (userData, req) => {
+export const signAndStoreJwt = async (userData, req) => {
   const token = await signJwt(userData);
   req.session.jwt = token;
 };
