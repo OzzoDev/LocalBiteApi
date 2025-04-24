@@ -1,4 +1,3 @@
-import { signOwnerJwt } from "../services/auth/jwt.js";
 import { addBusiness, addDish } from "../services/db/businesses.js";
 
 export const registerBusiness = async (req, res, next) => {
