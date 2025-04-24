@@ -29,3 +29,18 @@ export const addBusiness = async (data) => {
 
   return result[0];
 };
+
+export const findBusiness = async (businessId) => {
+  const query = `
+        SELCET * FROM businesses
+        WHERE id = $1
+    `;
+
+  const result = await executeQuery(query, [businessId]);
+
+  if (result.length === 0) {
+    throw new BusinessNotFoundError();
+  }
+
+  return result[0];
+};
