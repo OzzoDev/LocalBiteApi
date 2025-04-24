@@ -48,11 +48,11 @@ export const addDish = async (data) => {
 
 export const findBusiness = async (businessId) => {
   const query = `
-        SELCET * FROM businesses
+        SELECT * FROM businesses
         WHERE id = $1
     `;
 
-  const result = await executeQuery(query, [businessId]);
+  const result = await executeQuery(query, [parseInt(businessId, 10)]);
 
   if (result.length === 0) {
     throw new BusinessNotFoundError();

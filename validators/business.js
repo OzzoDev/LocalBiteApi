@@ -55,7 +55,6 @@ const businessSchema = z
 
 const dishSchema = z
   .object({
-    businessId: z.number({ message: "Business ID must be a number" }),
     dishName: z
       .string({ message: "Dish name must not be empty" })
       .nonempty({ message: "Dish name must not be empty" })

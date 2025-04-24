@@ -15,8 +15,10 @@ export const registerBusiness = async (req, res, next) => {
 };
 
 export const appendDish = async (req, res, next) => {
+  const { businessid: businessId } = req.params;
+
   try {
-    await addDish(req.body);
+    await addDish({ ...req.body, businessId: parseInt(businessId, 10) });
 
     res.status(201).json({ message: `${req.body.dishName} added successfuly`, success: true });
   } catch (err) {

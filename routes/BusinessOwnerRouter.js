@@ -6,6 +6,6 @@ const router = express.Router();
 
 router.post("/register", validateBusinessBody, registerBusiness);
 
-router.post("/dish", validateDishBody, appendDish);
+router.post("/dish/:businessid", validateDishBody, appendDish);
 
 export default router;
