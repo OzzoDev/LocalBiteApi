@@ -3,7 +3,7 @@ import { isCloseMatch } from "../utils/utils.js";
 
 export const registerBusiness = async (req, res, next) => {
   const { email } = req.user;
-  const { businessName } = req.body;
+  const { country, city, address, zipCode, businessName } = req.body;
 
   try {
     const isBusinessOwner = isCloseMatch(

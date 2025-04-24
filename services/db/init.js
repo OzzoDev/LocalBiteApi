@@ -61,10 +61,38 @@ export async function ensureUnVerifiedUsersTable() {
     await executeQuery(usernameIndex);
     await executeQuery(emailIndex);
 
-    // await executeQuery("DROP TABLE unverified_users");
-    // await executeQuery("DROP TABLE users");
-
     console.log("✅ Unverified users table and indexes ensured.");
+  } catch (err) {
+    console.error("Error ensuring users table:", err);
+  }
+}
+
+export async function ensureBusinessTable() {
+  try {
+    const tableQuery = `
+    CREATE TABLE IF NOT EXISTS businesses (
+      id BIGSERIAL PRIMARY KEY,
+      owner_id INT NOT NULL, 
+      business_name VARCHAR(100) NOT NULL,
+      country VARCHAR(100) NOT NULL, 
+      city VARCHAR(100) NOT NULL, 
+      address VARCHAR(255) NOT NULL, 
+      zipCode VARCHAR(20) NOT NULL, 
+      business_phone VARCHAR(15) NOT NULL,
+      business_website VARCHAR(100),
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE
+  );
+`;
+
+    const businessNameIndex = `
+      CREATE UNIQUE INDEX IF NOT EXISTS idx_businesses_business_lower ON users (LOWER(business_name));
+    `;
+
+    await executeQuery(tableQuery);
+    await executeQuery(businessNameIndex);
+
+    console.log("✅ Business table table and indexes ensured.");
   } catch (err) {
     console.error("Error ensuring users table:", err);
   }
