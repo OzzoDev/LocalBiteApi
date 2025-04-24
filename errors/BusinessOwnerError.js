@@ -17,3 +17,9 @@ export class NotOwnerError extends AppError {
     super(message, 401);
   }
 }
+
+export class UpdateError extends AppError {
+  constructor(message = "No fields provided for update") {
+    super(message, 401);
+  }
+}

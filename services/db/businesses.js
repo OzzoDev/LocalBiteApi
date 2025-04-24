@@ -3,6 +3,7 @@ import {
   BusinessNotFoundError,
   DishNotFoundError,
   NotOwnerError,
+  UpdateError,
 } from "../../errors/BusinessOwnerError.js";
 import { executeQuery } from "./init.js";
 
@@ -68,6 +69,43 @@ export const deleteDish = async (data) => {
    `;
 
   return await executeQuery(query, [parseInt(businessId, 10), parseInt(dishId, 10)]);
+};
+
+export const updateDish = async (data) => {
+  const { businessId, dishId, ownerId, dishName, description, price } = data;
+
+  const business = await findBusiness(businessId);
+  if (business.owner_id !== parseInt(ownerId, 10)) {
+    throw new NotOwnerError();
+  }
+
+  await findDish(dishId);
+
+  const fieldsToUpdate = {
+    ...(dishName !== undefined && { dish_name: dishName }),
+    ...(description !== undefined && { description }),
+    ...(price !== undefined && { price }),
+  };
+
+  if (Object.keys(fieldsToUpdate).length === 0) {
+    throw new UpdateError();
+  }
+
+  const keys = Object.keys(fieldsToUpdate);
+  const values = Object.values(fieldsToUpdate);
+
+  const setClause = keys.map((key, idx) => `${key} = $${idx + 1}`).join(", ");
+
+  const query = `
+      UPDATE dishes
+      SET ${setClause}
+      WHERE id = $${keys.length + 1}
+      RETURNING *;
+    `;
+
+  values.push(dishId);
+
+  return await executeQuery(query, values);
 };
 
 export const findDish = async (dishId) => {
