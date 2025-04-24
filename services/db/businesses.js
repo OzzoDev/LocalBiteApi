@@ -30,6 +30,22 @@ export const addBusiness = async (data) => {
   return result[0];
 };
 
+export const addDish = async (data) => {
+  const { dishName, description, price, businessId } = data;
+
+  await findBusiness(businessId);
+
+  const query = `
+    INSERT INTO dishes (dish_name, description, price, business_id)
+    VALUES ($1, $2, $3, $4)
+    RETURNING *
+  `;
+
+  const result = await executeQuery(query, [dishName, description, price, businessId]);
+
+  return result;
+};
+
 export const findBusiness = async (businessId) => {
   const query = `
         SELCET * FROM businesses
