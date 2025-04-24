@@ -16,13 +16,12 @@ export const normalizeString = (str) =>
     .replace(/\s+/g, "")
     .replace(/[^a-z0-9]/g, "");
 
-export const validateIsBusinessOwner = (businessName = "", email = "") => {
-  const emailDomain = email.split("@")[1].split(".")[0];
-  const normalizedBusinessName = normalizeString(businessName);
-  const normalizedEmailDomain = normalizeString(emailDomain);
+export const isCloseMatch = (value = "", referance = "") => {
+  const normalizedValue = normalizeString(value);
+  const normalizedReferance = normalizeString(referance);
 
-  const businessNameScore = calculateUnicodeSum(normalizedBusinessName);
-  const emailDomainScore = calculateUnicodeSum(normalizedEmailDomain);
+  const businessNameScore = calculateUnicodeSum(normalizedValue);
+  const emailDomainScore = calculateUnicodeSum(normalizedReferance);
 
   const maxScore = Math.max(businessNameScore, emailDomainScore);
   const minScore = Math.min(businessNameScore, emailDomainScore);
