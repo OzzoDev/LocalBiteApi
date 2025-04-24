@@ -1,3 +1,12 @@
+import countries from "i18n-iso-countries";
+import enLocale from "i18n-iso-countries/langs/en.json" assert { type: "json" };
+
+countries.registerLocale(enLocale);
+
+export const getCountryCodeFromName = (name) => {
+  return countries.getAlpha2Code(name, "en");
+};
+
 export const sanitizeValues = (values) => {
   return values.map((value) => {
     if (typeof value === "string") {
