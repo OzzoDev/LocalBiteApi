@@ -1,9 +1,5 @@
 import pg from "pg";
-import {
-  ensureBusinessTable,
-  ensureUnVerifiedUsersTable,
-  ensureUsersTable,
-} from "../services/db/init.js";
+import { createTables } from "../services/db/init.js";
 
 const pool = new pg.Pool({
   host: process.env.POSTGRES_HOST,
@@ -20,7 +16,7 @@ const pool = new pg.Pool({
 
     client.release();
 
-    await Promise.all([ensureUsersTable(), ensureUnVerifiedUsersTable(), ensureBusinessTable()]);
+    await createTables();
 
     console.log("✅ All tables ensured successfully");
   } catch (err) {

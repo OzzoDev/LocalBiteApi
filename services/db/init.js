@@ -67,7 +67,7 @@ export async function ensureUnVerifiedUsersTable() {
   }
 }
 
-export async function ensureBusinessTable() {
+export async function ensureBusinessesTable() {
   try {
     const tableQuery = `
       CREATE TABLE IF NOT EXISTS businesses (
@@ -88,11 +88,42 @@ export async function ensureBusinessTable() {
 
     await executeQuery(tableQuery);
 
-    console.log("✅ Business table table and indexes ensured.");
+    console.log("✅ Business table table.");
   } catch (err) {
     console.error("Error ensuring users table:", err);
   }
 }
+
+export async function ensureDishesTable() {
+  try {
+    const tableQuery = `
+      CREATE TABLE IF NOT EXISTS dishes (
+        id BIGSERIAL PRIMARY KEY,
+        dish_name VARCHAR(100) NOT NULL, 
+        description TEXT NOT NULL,
+        price DECIMAL(10, 2) NOT NULL, 
+        business_id INT NOT NULL, 
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (business_id) REFERENCES businesses(id) ON DELETE CASCADE
+      );
+    `;
+
+    await executeQuery(tableQuery);
+
+    console.log("✅ Dishes table ensured.");
+  } catch (err) {
+    console.error("Error ensuring dishes table:", err);
+  }
+}
+
+export const createTables = async () => {
+  await Promise.all([
+    ensureUsersTable(),
+    ensureUnVerifiedUsersTable(),
+    ensureBusinessesTable(),
+    ensureDishesTable(),
+  ]);
+};
 
 export const executeQuery = async (query, values = []) => {
   const sanitizedValues = sanitizeValues(values);
