@@ -116,12 +116,37 @@ export async function ensureDishesTable() {
   }
 }
 
+export async function ensureBusinessReviewsTable() {
+  try {
+    const tableQuery = `
+      CREATE TABLE IF NOT EXISTS business_reviews (
+        id BIGSERIAL PRIMARY KEY, 
+        user_id INT NOT NULL,
+        business_id INT NOT NULL,
+        rating INT NOT NULL, 
+        review VARCHAR(500), 
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+        FOREIGN KEY (business_id) REFERENCES businesses(id) ON DELETE CASCADE,
+        UNIQUE (user_id, business_id)
+      );
+    `;
+
+    await executeQuery(tableQuery);
+
+    console.log("✅ Business reviews table ensured.");
+  } catch (err) {
+    console.error("Error ensuring business reviews table:", err);
+  }
+}
+
 export const createTables = async () => {
   await Promise.all([
     ensureUsersTable(),
     ensureUnVerifiedUsersTable(),
     ensureBusinessesTable(),
     ensureDishesTable(),
+    ensureBusinessReviewsTable(),
   ]);
 };
 
