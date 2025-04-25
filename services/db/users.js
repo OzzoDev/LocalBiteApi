@@ -177,7 +177,7 @@ export const findUserById = async (userId) => {
     WHERE id = $1
   `;
 
-  const result = await executeQuery(query, [userId]);
+  const result = await executeQuery(query, [parseInt(userId, 10)]);
 
   if (result.length === 0) {
     throw new UserNotFoundError();

@@ -12,6 +12,7 @@ import {
 import { findUser, findUserById } from "../services/db/users.js";
 import { findBusiness } from "../services/db/businesses.js";
 import { NotOwnerError } from "../errors/BusinessOwnerError.js";
+import { NotFoundError } from "../errors/RouteErrors.js";
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -113,9 +114,13 @@ export const authorizeBusinessOwner = async (req, _, next) => {
     return next(new UnauthorhizedError());
   }
 
+  if (!businessId) {
+    return next(new NotFoundError());
+  }
+
   const business = await findBusiness(businessId);
 
-  if (business.owner_id !== ownerId) {
+  if (business.owner_id !== parseInt(ownerId, 10)) {
     return next(new NotOwnerError());
   }
 

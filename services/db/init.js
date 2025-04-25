@@ -88,7 +88,7 @@ export async function ensureBusinessesTable() {
 
     await executeQuery(tableQuery);
 
-    console.log("✅ Business table table.");
+    console.log("✅ Business table ensured.");
   } catch (err) {
     console.error("Error ensuring users table:", err);
   }
