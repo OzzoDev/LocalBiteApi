@@ -2,7 +2,7 @@ import {
   addBusinessReview,
   deleteBusinessReview,
   updateBusinessReview,
-} from "../services/db/reveiws";
+} from "../services/db/reveiws.js";
 
 export const reviewBusiness = async (req, res, next) => {
   const { businessid: businessId } = req.params;

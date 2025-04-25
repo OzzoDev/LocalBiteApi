@@ -2,7 +2,12 @@ import express from "express";
 import {
   validateBusinessReviewBody,
   validateBusinessUpdateReviewBody,
-} from "../validators/reviews";
+} from "../validators/reviews.js";
+import {
+  editBusinessReview,
+  removeBusinessReview,
+  reviewBusiness,
+} from "../controllers/ReviewController.js";
 
 const router = express.Router();
 
@@ -14,6 +19,6 @@ router.patch(
   editBusinessReview
 );
 
-router.delete("/business/:businessid/:reviewid", deleteBusinessReview);
+router.delete("/business/:businessid/:reviewid", removeBusinessReview);
 
 export default router;

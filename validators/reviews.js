@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { RequestBodyValidationError } from "../errors/ValidationErrors";
+import { RequestBodyValidationError } from "../errors/ValidationErrors.js";
 
 const businessReviewSchema = z
   .object({

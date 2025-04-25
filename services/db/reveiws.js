@@ -1,9 +1,16 @@
-import { UpdateError } from "../../errors/BusinessOwnerError.js";
+import { BusinessNotFoundError, UpdateError } from "../../errors/BusinessOwnerError.js";
 import { NotUserReview, ReviewNotFoundError } from "../../errors/ReviewErrors.js";
+import { findBusiness } from "./businesses.js";
 import { executeQuery } from "./init.js";
 
 export const addBusinessReview = async (data) => {
   const { userId, businessId, rating, review } = data;
+
+  const business = await findBusiness(businessId);
+
+  if (!business) {
+    throw new BusinessNotFoundError();
+  }
 
   const query = `
     INSERT INTO business_reviews (user_id, business_id, rating, review)
