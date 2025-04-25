@@ -1,4 +1,4 @@
-import { addBusiness, deleteBusiness } from "../services/db/businesses.js";
+import { addBusiness, deleteBusiness, findBusinesses } from "../services/db/businesses.js";
 import { updateUserRole } from "../services/db/users.js";
 
 export const registerBusiness = async (req, res, next) => {
@@ -28,6 +28,17 @@ export const unregisterBusiness = async (req, res, next) => {
     res
       .status(200)
       .json({ message: `Business with id '${businessId}' deleted successfully`, success: true });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getBusinesses = async (req, res, next) => {
+  const { id: ownerId } = req.user;
+
+  try {
+    const businesses = await findBusinesses(ownerId);
+    res.status(200).json({ businesses, success: true });
   } catch (err) {
     next(err);
   }
