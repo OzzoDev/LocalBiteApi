@@ -4,16 +4,18 @@ import {
   deleteDish,
   findBusinessDish,
   findBusinessDishes,
-  findDish,
-  findDishes,
   updateDish,
 } from "../services/db/businesses.js";
+import { updateUserRole } from "../services/db/users.js";
 
 export const registerBusiness = async (req, res, next) => {
-  const businessData = { ...req.body, ownerId: req.user.id };
+  const { id: userId } = req.user;
+  const businessData = { ...req.body, ownerId: userId };
 
   try {
     await addBusiness(businessData);
+
+    await updateUserRole(userId, "unverified_owner");
 
     res
       .status(201)

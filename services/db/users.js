@@ -216,6 +216,16 @@ export const deleteUser = async (userId, deleteCommand = "") => {
   await executeQuery(deleteQuery, [userId]);
 };
 
+export const updateUserRole = async (userId, role = "user") => {
+  const query = `
+    UPDATE users
+    SET role = $2
+    WHERE id = $1
+  `;
+
+  return await executeQuery(query, [userId, role]);
+};
+
 const updateOtp = async (userId, table = "users") => {
   const query = `
     UPDATE ${table}
