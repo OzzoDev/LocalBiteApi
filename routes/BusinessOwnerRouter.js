@@ -5,7 +5,7 @@ import {
   registerBusiness,
   unregisterBusiness,
 } from "../controllers/BusinessOwnerController.js";
-import { validateBusinessBody } from "../validators/business.js";
+import { validateBusinessBody } from "../validators/businesses.js";
 import { authorizeBusinessOwner } from "../middlewares/Auth.js";
 
 const router = express.Router();
