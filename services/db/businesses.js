@@ -57,7 +57,6 @@ export const deleteBusiness = async (businessId, ownerId, deleteCommand = "") =>
   const query = `
     DELETE FROM businesses
     WHERE id = $1
-    RETURNING *; 
   `;
 
   return await executeQuery(query, [parseInt(businessId, 10)]);

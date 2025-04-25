@@ -6,10 +6,10 @@ import { authorizeBusinessOwner } from "../middlewares/Auth.js";
 
 const router = express.Router();
 
-router.use("/:businessid/dishes", authorizeBusinessOwner, DishRouter);
-
 router.post("/", validateBusinessBody, registerBusiness);
 
-router.delete("/:deletecommand", unregisterBusiness);
+router.delete("/:businessid/:deletecommand", unregisterBusiness);
+
+router.use("/:businessid/dishes", authorizeBusinessOwner, DishRouter);
 
 export default router;
