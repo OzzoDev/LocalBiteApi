@@ -1,3 +1,4 @@
+import { UpdateError } from "../../errors/BusinessOwnerError.js";
 import { NotUserReview, ReviewNotFoundError } from "../../errors/ReviewErrors.js";
 import { executeQuery } from "./init.js";
 
@@ -22,9 +23,9 @@ export const addBusinessReview = async (data) => {
 };
 
 export const deleteBusinessReview = async (userId, reviewId) => {
-  const review = await findBusinessReview(reviewId);
+  const rev = await findBusinessReview(reviewId);
 
-  if (review.user_id !== parseInt(userId, 10)) {
+  if (rev.user_id !== parseInt(userId, 10)) {
     throw new NotUserReview();
   }
 
@@ -34,6 +35,41 @@ export const deleteBusinessReview = async (userId, reviewId) => {
   `;
 
   return await executeQuery(query, [parseInt(reviewId, 10)]);
+};
+
+export const updateBusinessReview = async (data) => {
+  const { userId, reviewId, rating, review } = data;
+
+  const rev = await findBusinessReview(reviewId);
+
+  if (rev.user_id !== parseInt(userId, 10)) {
+    throw new NotUserReview();
+  }
+
+  const fieldsToUpdate = {
+    ...(rating !== undefined && { rating }),
+    ...(review !== undefined && { review }),
+  };
+
+  if (Object.keys(fieldsToUpdate).length === 0) {
+    throw new UpdateError();
+  }
+
+  const keys = Object.keys(fieldsToUpdate);
+  const values = Object.values(fieldsToUpdate);
+
+  const setClause = keys.map((key, idx) => `${key} = $${idx + 1}`).join(", ");
+
+  const query = `
+    UPDATE business_reviews
+    SET ${setClause}
+    WHERE id = $${keys.length + 1}
+    RETURNING *;
+  `;
+
+  values.push(parseInt(reviewId, 10));
+
+  return await executeQuery(query, values);
 };
 
 export const findBusinessReview = async (reviewId) => {
