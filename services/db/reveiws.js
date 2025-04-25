@@ -1,3 +1,4 @@
+import { NotUserReview, ReviewNotFoundError } from "../../errors/ReviewErrors.js";
 import { executeQuery } from "./init.js";
 
 export const addBusinessReview = async (data) => {
@@ -17,5 +18,35 @@ export const addBusinessReview = async (data) => {
     rating,
     review,
   ]);
+  return result[0];
+};
+
+export const deleteBusinessReview = async (userId, reviewId) => {
+  const review = await findBusinessReview(reviewId);
+
+  if (review.user_id !== parseInt(userId, 10)) {
+    throw new NotUserReview();
+  }
+
+  const query = `
+    DELETE FROM business_reviews
+    WHERE id = $1; 
+  `;
+
+  return await executeQuery(query, [parseInt(reviewId, 10)]);
+};
+
+export const findBusinessReview = async (reviewId) => {
+  const query = `
+    SELECT * FROM business_reviews
+    WHERE id = $1
+  `;
+
+  const result = await executeQuery(query, [parseInt(reviewId, 10)]);
+
+  if (result.length === 0) {
+    throw new ReviewNotFoundError(`Review with id '${reviewId}' not found`);
+  }
+
   return result[0];
 };
