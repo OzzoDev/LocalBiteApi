@@ -1,12 +1,12 @@
 import express from "express";
+import { validateDishBody, validateDishUpdateBody } from "../validators/business.js";
 import {
   alterDish,
   appendDish,
   getDish,
   getDishes,
   removeDish,
-} from "../controllers/BusinessOwnerController.js";
-import { validateDishBody, validateDishUpdateBody } from "../validators/business.js";
+} from "../controllers/DishController.js";
 
 const router = express.Router({ mergeParams: true });
 

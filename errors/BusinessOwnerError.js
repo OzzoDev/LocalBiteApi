@@ -20,6 +20,12 @@ export class NotOwnerError extends AppError {
 
 export class UpdateError extends AppError {
   constructor(message = "No fields provided for update") {
-    super(message, 401);
+    super(message, 400);
+  }
+}
+
+export class DeleteBusinessError extends AppError {
+  constructor(message = "Error deleting business") {
+    super(message, 400);
   }
 }
