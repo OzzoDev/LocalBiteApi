@@ -52,13 +52,9 @@ export const addDish = async (data) => {
 };
 
 export const deleteDish = async (data) => {
-  const { businessId, dishId, ownerId } = data;
+  const { businessId, dishId } = data;
 
-  const business = await findBusiness(businessId);
-
-  if (business.owner_id !== parseInt(ownerId, 10)) {
-    throw new NotOwnerError();
-  }
+  await findBusiness(businessId);
 
   await findDish(dishId);
 

@@ -95,3 +95,9 @@ export class DeleteUserError extends AppError {
     super(message, 400);
   }
 }
+
+export class UnauthorhizedError extends AppError {
+  constructor(message = "Unauthorized") {
+    super(message, 403);
+  }
+}

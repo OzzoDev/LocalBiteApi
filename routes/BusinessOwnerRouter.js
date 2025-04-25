@@ -12,10 +12,13 @@ import {
   validateDishBody,
   validateDishUpdateBody,
 } from "../validators/business.js";
+import { authorizeBusinessOwner } from "../middlewares/Auth.js";
 
 const router = express.Router();
 
 router.post("/register", validateBusinessBody, registerBusiness);
+
+router.use("/", authorizeBusinessOwner);
 
 router.get("/dishes/:businessid", getDishes);
 

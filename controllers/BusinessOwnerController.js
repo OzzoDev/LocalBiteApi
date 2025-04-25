@@ -67,10 +67,9 @@ export const appendDish = async (req, res, next) => {
 
 export const removeDish = async (req, res, next) => {
   const { businessid: businessId, dishid: dishId } = req.params;
-  const { id: ownerId } = req.user;
 
   try {
-    await deleteDish({ businessId, dishId, ownerId });
+    await deleteDish({ businessId, dishId });
 
     res.status(200).json({ message: `Dish with id ${dishId} deleted successfuly`, success: true });
   } catch (err) {

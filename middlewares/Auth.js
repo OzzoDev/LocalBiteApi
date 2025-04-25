@@ -7,8 +7,11 @@ import {
   AccountSuspensionError,
   UserNotFoundError,
   JwtVersionError,
+  UnauthorhizedError,
 } from "../errors/AuthErrors.js";
-import { findUser } from "../services/db/users.js";
+import { findUser, findUserById } from "../services/db/users.js";
+import { findBusiness } from "../services/db/businesses.js";
+import { NotOwnerError } from "../errors/BusinessOwnerError.js";
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -98,4 +101,23 @@ export const ensureNotSuspended = async (req, _, next) => {
   } catch (err) {
     next(err);
   }
+};
+
+export const authorizeBusinessOwner = async (req, _, next) => {
+  const { businessid: businessId } = req.params;
+  const { id: ownerId } = req.user;
+
+  const user = await findUserById(ownerId);
+
+  if (!["unverified_owner", "owner"].includes(user.role)) {
+    return next(new UnauthorhizedError());
+  }
+
+  const business = await findBusiness(businessId);
+
+  if (business.owner_id !== ownerId) {
+    return next(new NotOwnerError());
+  }
+
+  next();
 };

@@ -171,6 +171,21 @@ export const findUser = async (userData) => {
   return result[0];
 };
 
+export const findUserById = async (userId) => {
+  const query = `
+    SELECT * FROM users
+    WHERE id = $1
+  `;
+
+  const result = await executeQuery(query, [userId]);
+
+  if (result.length === 0) {
+    throw new UserNotFoundError();
+  }
+
+  return result[0];
+};
+
 export const invalidateTokens = async (userId) => {
   const query = `
     UPDATE users
