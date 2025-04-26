@@ -6,6 +6,7 @@ export const ensureDishExists = async (req, res, next) => {
 
   try {
     await findDish(dishId);
+    next();
   } catch (err) {
     next(err);
   }
@@ -16,6 +17,7 @@ export const ensureBusinessExists = async (req, res, next) => {
 
   try {
     await findBusiness(businessId);
+    next();
   } catch (err) {
     next(err);
   }

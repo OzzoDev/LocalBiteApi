@@ -79,7 +79,7 @@ export const findBusiness = async (businessId) => {
   const result = await executeQuery(query, [parseInt(businessId, 10)]);
 
   if (result.length === 0) {
-    throw new BusinessNotFoundError();
+    throw new BusinessNotFoundError(`Business with id '${businessId}' not found`);
   }
 
   return result[0];

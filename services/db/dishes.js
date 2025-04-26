@@ -79,7 +79,7 @@ export const findDish = async (dishId) => {
   const result = await executeQuery(query, [parseInt(dishId, 10)]);
 
   if (result.length === 0) {
-    throw new DishNotFoundError();
+    throw new DishNotFoundError(`Dish with id '${dishId}' not found`);
   }
 
   return result[0];
