@@ -10,9 +10,9 @@ import {
 
 const router = express.Router({ mergeParams: true });
 
-router.get("/", getDishes);
-
 router.get("/:dishid", getDish);
+
+router.get("/", getDishes);
 
 router.post("/", validateDishBody, appendDish);
 

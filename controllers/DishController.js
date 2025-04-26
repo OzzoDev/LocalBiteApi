@@ -4,7 +4,7 @@ import {
   findBusinessDish,
   findBusinessDishes,
   updateDish,
-} from "../services/db/dishes.js";
+} from "../services/db/ownerDishes.js";
 
 export const getDish = async (req, res, next) => {
   const { businessid: businessId, dishid: dishId } = req.params;

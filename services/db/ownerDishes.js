@@ -1,5 +1,5 @@
 import { DishNotFoundError, NotOwnerError, UpdateError } from "../../errors/BusinessOwnerError.js";
-import { findBusiness } from "./businesses.js";
+import { findBusiness } from "./owner.js";
 import { executeQuery } from "./init.js";
 
 export const addDish = async (data) => {

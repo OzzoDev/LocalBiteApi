@@ -1,5 +1,5 @@
-import { findBusiness } from "../services/db/businesses.js";
-import { findDish } from "../services/db/dishes.js";
+import { findBusiness } from "../services/db/owner.js";
+import { findDish } from "../services/db/ownerDishes.js";
 
 export const ensureDishExists = async (req, res, next) => {
   const { dishid: dishId } = req.params;

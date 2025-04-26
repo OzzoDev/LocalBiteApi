@@ -1,4 +1,4 @@
-import { addBusiness, deleteBusiness, findBusinesses } from "../services/db/businesses.js";
+import { addBusiness, deleteBusiness, findBusinesses } from "../services/db/owner.js";
 import { updateUserRole } from "../services/db/users.js";
 
 export const registerBusiness = async (req, res, next) => {

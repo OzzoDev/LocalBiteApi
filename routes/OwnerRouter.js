@@ -1,5 +1,5 @@
 import express from "express";
-import DishRouter from "./DishRouter.js";
+import OwnerDishRouter from "./OwnerDishRouter.js";
 import {
   getBusinesses,
   registerBusiness,
@@ -16,6 +16,6 @@ router.post("/", validateBusinessBody, registerBusiness);
 
 router.delete("/:businessid/:deletecommand", unregisterBusiness);
 
-router.use("/:businessid/dishes", authorizeBusinessOwner, DishRouter);
+router.use("/:businessid/dishes", authorizeBusinessOwner, OwnerDishRouter);
 
 export default router;

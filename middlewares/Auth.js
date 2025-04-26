@@ -10,7 +10,7 @@ import {
   UnauthorhizedError,
 } from "../errors/AuthErrors.js";
 import { findUser, findUserById } from "../services/db/users.js";
-import { findBusiness } from "../services/db/businesses.js";
+import { findBusiness } from "../services/db/owner.js";
 import { NotOwnerError } from "../errors/BusinessOwnerError.js";
 import { NotFoundError } from "../errors/RouteErrors.js";
 
