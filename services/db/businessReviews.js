@@ -30,7 +30,7 @@ export const addReview = async (data) => {
 };
 
 export const deleteReview = async (userId, reviewId) => {
-  const rev = await findBusinessReview(reviewId);
+  const rev = await findReview(reviewId);
 
   if (rev.user_id !== parseInt(userId, 10)) {
     throw new NotUserReview();
@@ -47,7 +47,7 @@ export const deleteReview = async (userId, reviewId) => {
 export const updateReview = async (data) => {
   const { userId, reviewId, rating, review } = data;
 
-  const rev = await findBusinessReview(reviewId);
+  const rev = await findReview(reviewId);
 
   if (rev.user_id !== parseInt(userId, 10)) {
     throw new NotUserReview();
