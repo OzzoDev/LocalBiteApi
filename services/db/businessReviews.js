@@ -3,7 +3,7 @@ import { NotUserReview, ReviewNotFoundError } from "../../errors/ReviewErrors.js
 import { findBusiness } from "./businesses.js";
 import { executeQuery } from "./init.js";
 
-export const addBusinessReview = async (data) => {
+export const addReview = async (data) => {
   const { userId, businessId, rating, review } = data;
 
   const business = await findBusiness(businessId);
@@ -29,7 +29,7 @@ export const addBusinessReview = async (data) => {
   return result[0];
 };
 
-export const deleteBusinessReview = async (userId, reviewId) => {
+export const deleteReview = async (userId, reviewId) => {
   const rev = await findBusinessReview(reviewId);
 
   if (rev.user_id !== parseInt(userId, 10)) {
@@ -44,7 +44,7 @@ export const deleteBusinessReview = async (userId, reviewId) => {
   return await executeQuery(query, [parseInt(reviewId, 10)]);
 };
 
-export const updateBusinessReview = async (data) => {
+export const updateReview = async (data) => {
   const { userId, reviewId, rating, review } = data;
 
   const rev = await findBusinessReview(reviewId);
@@ -79,7 +79,7 @@ export const updateBusinessReview = async (data) => {
   return await executeQuery(query, values);
 };
 
-export const findBusinessReview = async (reviewId) => {
+export const findReview = async (reviewId) => {
   const query = `
     SELECT * FROM business_reviews
     WHERE id = $1
@@ -92,4 +92,13 @@ export const findBusinessReview = async (reviewId) => {
   }
 
   return result[0];
+};
+
+export const findReviews = async (businessId) => {
+  const query = `
+    SELECT * FROM business_reviews
+    WHERE business_id = $1
+  `;
+
+  return await executeQuery(query, [parseInt(businessId, 10)]);
 };

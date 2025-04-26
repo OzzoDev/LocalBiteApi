@@ -31,7 +31,7 @@ const businessUpdateReviewSchema = z
   })
   .strict();
 
-export const validateBusinessReviewBody = (req, res, next) => {
+export const validateReviewBody = (req, res, next) => {
   try {
     businessReviewSchema.parse(req.body);
     next();
@@ -46,7 +46,7 @@ export const validateBusinessReviewBody = (req, res, next) => {
   }
 };
 
-export const validateBusinessUpdateReviewBody = (req, res, next) => {
+export const validateUpdateReviewBody = (req, res, next) => {
   try {
     businessUpdateReviewSchema.parse(req.body);
     next();

@@ -24,8 +24,8 @@ app.use(serverSession);
 app.use(rotateSession);
 
 app.use("/auth", AuthRouter);
-app.use("/api", authenticate, ensureIsVerified, ApiRouter);
 app.use("/owner", authenticate, ensureIsVerified, BusinessOwnerRouter);
+app.use("/api", authenticate, ensureIsVerified, ApiRouter);
 
 app.get("/", (_, res) => {
   res.send("Welcome to the LocalBiteApi");
