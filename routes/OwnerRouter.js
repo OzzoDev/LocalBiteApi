@@ -1,12 +1,12 @@
 import express from "express";
 import OwnerDishRouter from "./OwnerDishRouter.js";
+import { validateBusinessBody } from "../validators/businesses.js";
+import { authorizeBusinessOwner } from "../middlewares/Auth.js";
 import {
   getBusinesses,
   registerBusiness,
   unregisterBusiness,
-} from "../controllers/BusinessOwnerController.js";
-import { validateBusinessBody } from "../validators/businesses.js";
-import { authorizeBusinessOwner } from "../middlewares/Auth.js";
+} from "../controllers/OwnerController.js";
 
 const router = express.Router();
 

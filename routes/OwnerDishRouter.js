@@ -6,7 +6,7 @@ import {
   getDish,
   getDishes,
   removeDish,
-} from "../controllers/DishController.js";
+} from "../controllers/OwnerDishController.js";
 
 const router = express.Router({ mergeParams: true });
 
