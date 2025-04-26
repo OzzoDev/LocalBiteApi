@@ -1,6 +1,6 @@
-import { UpdateError } from "../../errors/BusinessOwnerError";
-import { DishNotFoundError } from "../../errors/ResourceErrors";
-import { NotUserReview, ReviewNotFoundError } from "../../errors/ReviewErrors";
+import { UpdateError } from "../../errors/BusinessOwnerError.js";
+import { DishNotFoundError } from "../../errors/ResourceErrors.js";
+import { NotUserReview, ReviewNotFoundError } from "../../errors/ReviewErrors.js";
 import { executeQuery } from "./init.js";
 
 export const addReview = async (data) => {

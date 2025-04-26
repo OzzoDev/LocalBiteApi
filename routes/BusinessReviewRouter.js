@@ -19,8 +19,8 @@ router.get("/:businessid", getReviews);
 
 router.post("/:businessid", validateReviewBody, review);
 
-router.patch("/:businessid/:reviewid", validateUpdateReviewBody, editReview);
+router.patch("/:reviewid", validateUpdateReviewBody, editReview);
 
-router.delete("/:businessid/:reviewid", removeReview);
+router.delete("/:reviewid", removeReview);
 
 export default router;

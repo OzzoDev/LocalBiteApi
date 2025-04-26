@@ -45,14 +45,14 @@ export const getReview = async (req, res, next) => {
 };
 
 export const editReview = async (req, res, next) => {
-  const { businessid: businessId } = req.params;
+  const { reviewid: reviewId } = req.params;
   const { id: userId } = req.user;
   try {
-    const review = await updateReview({ userId, businessId, ...req.body });
+    await updateReview({ userId, reviewId, ...req.body });
 
     res
       .status(200)
-      .json({ message: `Review with id '${review.id}' updated successfully`, success: true });
+      .json({ message: `Review with id '${reviewId}' updated successfully`, success: true });
   } catch (err) {
     next(err);
   }
@@ -61,6 +61,7 @@ export const editReview = async (req, res, next) => {
 export const removeReview = async (req, res, next) => {
   const { reviewid: reviewId } = req.params;
   const { id: userId } = req.user;
+
   try {
     await deleteReview(userId, reviewId);
 
