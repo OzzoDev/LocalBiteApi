@@ -53,42 +53,16 @@ const businessSchema = z
     }
   );
 
-const dishSchema = z
-  .object({
-    dishName: z
-      .string({ message: "Dish name must not be empty" })
-      .nonempty({ message: "Dish name must not be empty" })
-      .min(3, { message: "Dish name must be at least 3 characters long" })
-      .max(100, { message: "Dish name cannot be longer than 100 characters" }),
-    description: z
-      .string({ message: "Description must not be empty" })
-      .nonempty({ message: "Description must not be empty" })
-      .min(10, { message: "Description must be at least 10 characters long" })
-      .max(300, { message: "Description cannot be longer than 300 characters" }),
-    price: z
-      .number({ message: "Price must be a number" })
-      .positive({ message: "Price must be greater than 0" }),
-  })
-  .strict();
-
-const dishUpdateSchema = z
-  .object({
-    dishName: z
-      .string({ message: "Dish name must not be empty" })
-      .min(3, { message: "Dish name must be at least 3 characters long" })
-      .max(100, { message: "Dish name cannot be longer than 100 characters" })
-      .optional(),
-    description: z
-      .string({ message: "Description must not be empty" })
-      .min(10, { message: "Description must be at least 10 characters long" })
-      .max(300, { message: "Description cannot be longer than 300 characters" })
-      .optional(),
-    price: z
-      .number({ message: "Price must be a number" })
-      .positive({ message: "Price must be greater than 0" })
-      .optional(),
-  })
-  .strict();
+const nearbyBusinessSchema = z.object({
+  lat: z.coerce
+    .number()
+    .min(-90, { message: "Latitude must be greater or equal to -90" })
+    .max(90, { message: "Latitude must be less or equal to 90" }),
+  lon: z.coerce
+    .number()
+    .min(-180, { message: "Longitude must be greater or equal to -180" })
+    .max(180, { message: "Longitude must less or equal to 180" }),
+});
 
 export const validateBusinessBody = (req, _, next) => {
   try {
@@ -105,24 +79,9 @@ export const validateBusinessBody = (req, _, next) => {
   }
 };
 
-export const validateDishBody = (req, _, next) => {
+export const validateNearbyBusinessQuery = (req, _, next) => {
   try {
-    dishSchema.parse(req.body);
-    next();
-  } catch (err) {
-    if (err instanceof z.ZodError) {
-      return next(
-        new RequestBodyValidationError(err.errors.map((error) => error.message).join(", "))
-      );
-    }
-
-    next(err);
-  }
-};
-
-export const validateDishUpdateBody = (req, _, next) => {
-  try {
-    dishUpdateSchema.parse(req.body);
+    nearbyBusinessSchema.parse(req.query);
     next();
   } catch (err) {
     if (err instanceof z.ZodError) {

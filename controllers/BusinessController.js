@@ -14,12 +14,6 @@ export const getBusinesses = async (req, res, next) => {
 export const getNearbyBusinesses = async (req, res, next) => {
   const { lat: latitude, lon: longitude } = req.query;
 
-  console.log(req.query, latitude, longitude);
-
-  if (!latitude || !longitude) {
-    return res.send("Stop");
-  }
-
   try {
     const response = await axios.get(
       `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`

@@ -1,5 +1,5 @@
 import express from "express";
-import { validateDishBody, validateDishUpdateBody } from "../validators/businesses.js";
+import { validateDishBody, validateDishUpdateBody } from "../validators/dishes.js";
 import {
   alterDish,
   appendDish,
