@@ -88,7 +88,8 @@ export const findReview = async (reviewId) => {
   const result = await executeQuery(query, [parseInt(reviewId, 10)]);
 
   if (result.length === 0) {
-    throw new ReviewNotFoundError(`Review with id '${reviewId}' not found`);
+    // throw new ReviewNotFoundError(`Review with id '${reviewId}' not found`);
+    throw new ReviewNotFoundError();
   }
 
   return result[0];

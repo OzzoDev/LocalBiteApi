@@ -1,6 +1,7 @@
 import {
   addReview,
   deleteReview,
+  findReview,
   findReviews,
   updateReview,
 } from "../services/db/businessReviews.js";
@@ -25,6 +26,18 @@ export const getReviews = async (req, res, next) => {
     const reviews = await findReviews(businessId);
 
     res.status(200).json({ reviews, success: true });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getReview = async (req, res, next) => {
+  const { reviewid: reviewId } = req.params;
+
+  try {
+    const review = await findReview(reviewId);
+
+    res.status(200).json({ review, success: true });
   } catch (err) {
     next(err);
   }
