@@ -11,7 +11,7 @@ const businessReviewSchema = z
       .string({ message: "Review must be a string" })
       .nonempty({ message: "Review is required" })
       .min(10, { message: "Review must be at least 10 characters long" })
-      .max(500, { message: "Review must not be longer than 500 characters" }),
+      .max(200, { message: "Review must not be longer than 200 characters" }),
   })
   .strict();
 
@@ -26,7 +26,7 @@ const businessUpdateReviewSchema = z
       .string({ message: "Review must be a string" })
       .nonempty({ message: "Review is required" })
       .min(10, { message: "Review must be at least 10 characters long" })
-      .max(500, { message: "Review must not be longer than 500 characters" })
+      .max(200, { message: "Review must not be longer than 200 characters" })
       .optional(),
   })
   .strict();

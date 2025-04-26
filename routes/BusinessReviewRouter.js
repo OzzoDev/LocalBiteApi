@@ -7,7 +7,7 @@ import {
   removeReview,
   review,
 } from "../controllers/BusinessReviewController.js";
-import { validateReviewBody, validateUpdateReviewBody } from "../validators/businessReviews.js";
+import { validateReviewBody, validateUpdateReviewBody } from "../validators/reviews.js";
 
 const router = express.Router({ mergeParams: true });
 

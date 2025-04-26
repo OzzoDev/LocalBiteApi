@@ -124,7 +124,7 @@ export async function ensureBusinessReviewsTable() {
         user_id INT NOT NULL,
         business_id INT NOT NULL,
         rating INT NOT NULL, 
-        review VARCHAR(500), 
+        review VARCHAR(200), 
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
         FOREIGN KEY (business_id) REFERENCES businesses(id) ON DELETE CASCADE,

@@ -7,6 +7,7 @@ import {
   removeReview,
   review,
 } from "../controllers/DishReviewController.js";
+import { validateReviewBody, validateUpdateReviewBody } from "../validators/reviews.js";
 
 const router = express.Router();
 
@@ -16,9 +17,9 @@ router.get("/:dishid/rating", getRatingStats);
 
 router.get("/:dishid", getReviews);
 
-router.post("/", review);
+router.post("/", validateReviewBody, review);
 
-router.patch("/:dishid", editReview);
+router.patch("/:dishid", validateUpdateReviewBody, editReview);
 
 router.delete("/:dishid", removeReview);
 
