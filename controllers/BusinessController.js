@@ -1,5 +1,5 @@
 import axios from "axios";
-import { findBusinesses } from "../services/db/business.js";
+import { findBusinesses, findNearbyBusinesses } from "../services/db/business.js";
 import { LocationNotFoundError } from "../errors/ResourceErrors.js";
 
 export const getBusinesses = async (req, res, next) => {
@@ -26,7 +26,9 @@ export const getNearbyBusinesses = async (req, res, next) => {
     const address = response.data.address;
     const location = address.city || address.town || address.village;
 
-    res.status(200).json({ location, success: true });
+    const businesses = await findNearbyBusinesses(location);
+
+    res.status(200).json({ businesses, success: true });
   } catch (err) {
     next(err);
   }
