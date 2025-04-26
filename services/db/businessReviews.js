@@ -88,8 +88,7 @@ export const findReview = async (reviewId) => {
   const result = await executeQuery(query, [parseInt(reviewId, 10)]);
 
   if (result.length === 0) {
-    // throw new ReviewNotFoundError(`Review with id '${reviewId}' not found`);
-    throw new ReviewNotFoundError();
+    throw new ReviewNotFoundError(`Review with id '${reviewId}' not found`);
   }
 
   return result[0];
@@ -102,4 +101,29 @@ export const findReviews = async (businessId) => {
   `;
 
   return await executeQuery(query, [parseInt(businessId, 10)]);
+};
+
+export const findRatingStats = async (businessId) => {
+  const query = `
+    SELECT 
+      AVG(rating) AS avg_rating, 
+      MIN(rating) AS min_rating, 
+      MAX(rating) AS max_rating, 
+      COUNT(review) AS review_count 
+    FROM business_reviews
+    WHERE business_id = $1
+  `;
+
+  const result = await executeQuery(query, [parseInt(businessId, 10)]);
+
+  if (result.length === 0) {
+    throw new BusinessNotFoundError();
+  }
+
+  const averageRating = Math.round(result[0].avg_rating || 0);
+  const minRating = result[0].min_rating || 0;
+  const maxRating = result[0].max_rating || 0;
+  const numReviews = result[0].review_count;
+
+  return { averageRating, minRating, maxRating, reviewCount: numReviews };
 };
