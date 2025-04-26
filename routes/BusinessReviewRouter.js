@@ -11,16 +11,16 @@ import { validateReviewBody, validateUpdateReviewBody } from "../validators/revi
 
 const router = express.Router({ mergeParams: true });
 
-router.get("/:businessid/rating", getRatingStats);
+router.get("/rating", getRatingStats);
 
-router.get("/:businessid/:reviewid", getReview);
+router.get("/:reviewid", getReview);
 
-router.get("/:businessid", getReviews);
+router.get("/", getReviews);
 
-router.post("/:businessid", validateReviewBody, review);
+router.post("/", validateReviewBody, review);
 
-router.patch("/:reviewid", validateUpdateReviewBody, editReview);
+router.patch("/", validateUpdateReviewBody, editReview);
 
-router.delete("/:reviewid", removeReview);
+router.delete("/", removeReview);
 
 export default router;

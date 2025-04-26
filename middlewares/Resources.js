@@ -1,3 +1,4 @@
+import { findBusiness } from "../services/db/businesses.js";
 import { findDish } from "../services/db/dishes.js";
 
 export const ensureDishExists = async (req, res, next) => {
@@ -5,6 +6,16 @@ export const ensureDishExists = async (req, res, next) => {
 
   try {
     await findDish(dishId);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const ensureBusinessExists = async (req, res, next) => {
+  const { businessid: businessId } = req.params;
+
+  try {
+    await findBusiness(businessId);
   } catch (err) {
     next(err);
   }
