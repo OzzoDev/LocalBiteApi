@@ -9,18 +9,18 @@ import {
 } from "../controllers/DishReviewController.js";
 import { validateReviewBody, validateUpdateReviewBody } from "../validators/reviews.js";
 
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 
-router.get("/:dishid/:reviewid", getReview);
+router.get("/:reviewid", getReview);
 
-router.get("/:dishid/rating", getRatingStats);
+router.get("/rating", getRatingStats);
 
-router.get("/:dishid", getReviews);
+router.get("/", getReviews);
 
 router.post("/", validateReviewBody, review);
 
-router.patch("/:dishid", validateUpdateReviewBody, editReview);
+router.patch("/", validateUpdateReviewBody, editReview);
 
-router.delete("/:dishid", removeReview);
+router.delete("/", removeReview);
 
 export default router;
