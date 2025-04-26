@@ -5,3 +5,9 @@ export class DishNotFoundError extends AppError {
     super(message, 404);
   }
 }
+
+export class LocationNotFoundError extends AppError {
+  constructor(message = "Location not found") {
+    super(message, 404);
+  }
+}
