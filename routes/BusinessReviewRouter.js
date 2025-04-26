@@ -1,6 +1,7 @@
 import express from "express";
 import {
   editReview,
+  getRatingStats,
   getReview,
   getReviews,
   removeReview,
@@ -10,9 +11,11 @@ import { validateReviewBody, validateUpdateReviewBody } from "../validators/busi
 
 const router = express.Router({ mergeParams: true });
 
-router.get("/:businessid", getReviews);
+router.get("/:businessid/rating", getRatingStats);
 
 router.get("/:businessid/:reviewid", getReview);
+
+router.get("/:businessid", getReviews);
 
 router.post("/:businessid", validateReviewBody, review);
 

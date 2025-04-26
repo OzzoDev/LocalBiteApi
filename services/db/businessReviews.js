@@ -123,7 +123,7 @@ export const findRatingStats = async (businessId) => {
   const averageRating = Math.round(result[0].avg_rating || 0);
   const minRating = result[0].min_rating || 0;
   const maxRating = result[0].max_rating || 0;
-  const numReviews = result[0].review_count;
+  const numReviews = parseInt(result[0].review_count, 10) || 0;
 
   return { averageRating, minRating, maxRating, reviewCount: numReviews };
 };

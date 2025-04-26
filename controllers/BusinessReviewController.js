@@ -1,6 +1,7 @@
 import {
   addReview,
   deleteReview,
+  findRatingStats,
   findReview,
   findReviews,
   updateReview,
@@ -66,6 +67,18 @@ export const removeReview = async (req, res, next) => {
     res
       .status(200)
       .json({ message: `Review with id '${reviewId}' deleted successfully`, success: true });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getRatingStats = async (req, res, next) => {
+  const { businessid: businessId } = req.params;
+
+  try {
+    const ratingStats = await findRatingStats(businessId);
+
+    res.status(200).json({ ratingStats, success: true });
   } catch (err) {
     next(err);
   }
