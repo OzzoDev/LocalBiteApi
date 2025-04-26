@@ -140,6 +140,30 @@ export async function ensureBusinessReviewsTable() {
   }
 }
 
+export async function ensureDishReviewsTable() {
+  try {
+    const tableQuery = `
+      CREATE TABLE IF NOT EXISTS dish_reviews (
+        id BIGSERIAL PRIMARY KEY, 
+        user_id INT NOT NULL,
+        dish_id INT NOT NULL,
+        rating INT NOT NULL, 
+        review VARCHAR(200), 
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+        FOREIGN KEY (dish_id) REFERENCES dishes(id) ON DELETE CASCADE,
+        UNIQUE (user_id, dish_id)
+      );
+    `;
+
+    await executeQuery(tableQuery);
+
+    console.log("✅ Dish reviews table ensured.");
+  } catch (err) {
+    console.error("Error ensuring dish reviews table:", err);
+  }
+}
+
 export const createTables = async () => {
   await Promise.all([
     ensureUsersTable(),
@@ -147,6 +171,7 @@ export const createTables = async () => {
     ensureBusinessesTable(),
     ensureDishesTable(),
     ensureBusinessReviewsTable(),
+    ensureDishReviewsTable(),
   ]);
 };
 
