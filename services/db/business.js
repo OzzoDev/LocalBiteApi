@@ -4,7 +4,6 @@ export const findBusinesses = async () => {
   const query = `
     SELECT 
       businesses.id AS business_id,
-      businesses.owner_id AS owner_id,
       businesses.business_name AS business_name,
       businesses.country AS country,
       businesses.city AS city,
@@ -12,7 +11,6 @@ export const findBusinesses = async () => {
       businesses.zip_code AS zip_code,
       businesses.business_phone AS business_phone,
       businesses.business_website AS business_website,
-      businesses.is_verified AS is_verified,
       businesses.created_at AS created_at,
       CAST(COUNT(business_reviews.review) AS INTEGER) AS review_count,
       CAST(ROUND(AVG(business_reviews.rating), 2) AS INTEGER) AS avg_rating,
@@ -25,6 +23,7 @@ export const findBusinesses = async () => {
       ON businesses.id = business_reviews.business_id
     LEFT JOIN dishes
       ON businesses.id = dishes.business_id
+    WHERE businesses.is_verified = true
     GROUP BY
       businesses.id,
       businesses.owner_id,
