@@ -11,8 +11,8 @@ export const findBusinesses = async () => {
 export const findNearbyBusinesses = async (location) => {
   const query = `
     SELECT * FROM businesses
-    WHERE LOWER(city) = TRIM(LOWER($1))
+    WHERE LOWER(city) ILIKE TRIM(LOWER($1))
   `;
 
-  return await executeQuery(query, [location]);
+  return await executeQuery(query, [`%${location}%`]);
 };
