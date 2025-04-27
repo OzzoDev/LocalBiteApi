@@ -15,12 +15,16 @@ export const findBusinesses = async () => {
       businesses.is_verified AS is_verified,
       businesses.created_at AS created_at,
       CAST(COUNT(business_reviews.review) AS INTEGER) AS review_count,
-      ROUND(AVG(business_reviews.rating), 2) AS avg_rating,
+      CAST(ROUND(AVG(business_reviews.rating), 2) AS INTEGER) AS avg_rating,
       MIN(business_reviews.rating) AS min_rating,
-      MAX(business_reviews.rating) AS max_rating
+      MAX(business_reviews.rating) AS max_rating,
+      CAST(COUNT(dishes.id) AS INTEGER) AS dish_count,
+      CAST(ROUND(AVG(dishes.price), 2) AS INTEGER) AS avg_dish_price
     FROM businesses
     LEFT JOIN business_reviews
-    ON businesses.id = business_reviews.business_id
+      ON businesses.id = business_reviews.business_id
+    LEFT JOIN dishes
+      ON businesses.id = dishes.business_id
     GROUP BY
       businesses.id,
       businesses.owner_id,

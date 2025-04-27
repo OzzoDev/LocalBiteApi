@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { RequestBodyValidationError } from "../errors/ValidationErrors.js";
 
 const dishSchema = z
   .object({
