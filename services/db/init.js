@@ -78,7 +78,6 @@ export async function ensureBusinessesTable() {
         city VARCHAR(100) NOT NULL, 
         address VARCHAR(255) NOT NULL, 
         zip_code VARCHAR(20) NOT NULL, 
-        location JSON NOT NULL,
         business_phone VARCHAR(15) NOT NULL,
         business_website VARCHAR(100),
         is_verified BOOLEAN DEFAULT false,
