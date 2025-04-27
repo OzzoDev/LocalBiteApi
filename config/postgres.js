@@ -1,6 +1,14 @@
 import pg from "pg";
 import { createTables } from "../services/db/init.js";
 
+console.log(
+  process.env.POSTGRES_HOST,
+  process.env.POSTGRES_DB,
+  Number(process.env.POSTGRES_PORT),
+  process.env.POSTGRES_PASSWORD,
+  process.env.POSTGRES_DB
+);
+
 const pool = new pg.Pool({
   host: process.env.POSTGRES_HOST,
   port: Number(process.env.POSTGRES_PORT),

@@ -23,7 +23,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./db/seed_data.sql:/docker-entrypoint-initdb.d/seed_data.sql
+      - ./db:/docker-entrypoint-initdb.d
       - database-v:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}", "-d", "${POSTGRES_DB}"]

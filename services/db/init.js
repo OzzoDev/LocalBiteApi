@@ -165,14 +165,12 @@ export async function ensureDishReviewsTable() {
 }
 
 export const createTables = async () => {
-  await Promise.all([
-    ensureUsersTable(),
-    ensureUnVerifiedUsersTable(),
-    ensureBusinessesTable(),
-    ensureDishesTable(),
-    ensureBusinessReviewsTable(),
-    ensureDishReviewsTable(),
-  ]);
+  await ensureUsersTable();
+  await ensureUnVerifiedUsersTable();
+  await ensureBusinessesTable();
+  await ensureDishesTable();
+  await ensureBusinessReviewsTable();
+  await ensureDishReviewsTable();
 };
 
 export const executeQuery = async (query, values = []) => {

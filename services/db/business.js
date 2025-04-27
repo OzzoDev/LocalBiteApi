@@ -38,12 +38,6 @@ export const findBusinesses = async () => {
       businesses.created_at;
   `;
 
-  const businesses = await executeQuery("SELECT * FROM businesses");
-  const businessReviews = await executeQuery("SELECT * FROM business_reviews");
-
-  console.log("Businesses: ", businesses);
-  console.log("BusinessReviews: ", businessReviews);
-
   return await executeQuery(query);
 };
 
