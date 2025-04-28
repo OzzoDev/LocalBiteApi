@@ -117,7 +117,7 @@ export const findRatingStats = async (businessId) => {
   return { averageRating, minRating, maxRating, reviewCount: numReviews };
 };
 
-export const findEveryReview = async (requestQuery) => {
+export const queryEveryReviews = async (requestQuery) => {
   const { sort, order, page = 1, limit = 10 } = requestQuery;
   const offset = (page - 1) * limit;
 
@@ -133,4 +133,23 @@ export const findEveryReview = async (requestQuery) => {
   query += ` ORDER BY ${validSort} ${validOrder} LIMIT $1 OFFSET $2`;
 
   return await executeQuery(query, [limit, offset]);
+};
+
+export const queryBusinessReviews = async (requestQuery, businessId) => {
+  const { sort, order, page = 1, limit = 10 } = requestQuery;
+  const offset = (page - 1) * limit;
+
+  let query = `
+    SELECT *
+    FROM business_reviews
+    WHERE business_id = $1
+  `;
+
+  const allowedSortFields = ["rating"];
+  const validSort = allowedSortFields.includes(sort) ? sort : "created_at";
+  const validOrder = order === "asc" ? "ASC" : "DESC";
+
+  query += ` ORDER BY ${validSort} ${validOrder} LIMIT $2 OFFSET $3`;
+
+  return await executeQuery(query, [parseInt(businessId, 10), limit, offset]);
 };
