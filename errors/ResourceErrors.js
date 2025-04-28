@@ -11,3 +11,9 @@ export class LocationNotFoundError extends AppError {
     super(message, 404);
   }
 }
+
+export class MenuNotFoundError extends AppError {
+  constructor(message = "Menu not found") {
+    super(message, 404);
+  }
+}
