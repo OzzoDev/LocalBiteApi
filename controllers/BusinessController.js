@@ -4,7 +4,7 @@ import { LocationNotFoundError } from "../errors/ResourceErrors.js";
 
 export const getBusinesses = async (req, res, next) => {
   try {
-    const businesses = await findBusinesses();
+    const businesses = await findBusinesses(req.query);
     res.status(200).json({ businesses, success: true });
   } catch (err) {
     next(err);

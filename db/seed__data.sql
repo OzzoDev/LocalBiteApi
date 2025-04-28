@@ -11,13 +11,10 @@ CREATE TABLE IF NOT EXISTS users (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Index for Users Table on Username (lowercase)
 CREATE UNIQUE INDEX IF NOT EXISTS idx_users_username_lower ON users (LOWER(username));
 
--- Index for Users Table on Email (lowercase)
 CREATE UNIQUE INDEX IF NOT EXISTS idx_users_email_lower ON users (LOWER(email));
 
--- Unverified Users Table
 CREATE TABLE IF NOT EXISTS unverified_users (
   id BIGSERIAL PRIMARY KEY,
   username VARCHAR(100) NOT NULL,
@@ -27,13 +24,10 @@ CREATE TABLE IF NOT EXISTS unverified_users (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Index for Unverified Users Table on Username (lowercase)
 CREATE UNIQUE INDEX IF NOT EXISTS idx_unverified_users_username_lower ON unverified_users (LOWER(username));
 
--- Index for Unverified Users Table on Email (lowercase)
 CREATE UNIQUE INDEX IF NOT EXISTS idx_unverified_users_email_lower ON unverified_users (LOWER(email));
 
--- Businesses Table
 CREATE TABLE IF NOT EXISTS businesses (
   id BIGSERIAL PRIMARY KEY,
   owner_id INT NOT NULL, 
@@ -49,7 +43,6 @@ CREATE TABLE IF NOT EXISTS businesses (
   FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- Dishes Table
 CREATE TABLE IF NOT EXISTS dishes (
   id BIGSERIAL PRIMARY KEY,
   dish_name VARCHAR(100) NOT NULL, 
@@ -60,7 +53,6 @@ CREATE TABLE IF NOT EXISTS dishes (
   FOREIGN KEY (business_id) REFERENCES businesses(id) ON DELETE CASCADE
 );
 
--- Business Reviews Table
 CREATE TABLE IF NOT EXISTS business_reviews (
   id BIGSERIAL PRIMARY KEY, 
   user_id INT NOT NULL,
@@ -73,7 +65,6 @@ CREATE TABLE IF NOT EXISTS business_reviews (
   UNIQUE (user_id, business_id)
 );
 
--- Dish Reviews Table
 CREATE TABLE IF NOT EXISTS dish_reviews (
   id BIGSERIAL PRIMARY KEY, 
   user_id INT NOT NULL,
