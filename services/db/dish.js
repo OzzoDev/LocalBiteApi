@@ -1,4 +1,4 @@
-import { MenuNotFoundError } from "../../errors/ResourceErrors.js";
+import { DishNotFoundError, MenuNotFoundError } from "../../errors/ResourceErrors.js";
 import { executeQuery } from "./init.js";
 
 export const findDishes = async () => {
@@ -37,4 +37,30 @@ export const findMenu = async (businessId) => {
   }
 
   return result[0].menu;
+};
+
+export const findMenuItem = async (businessId, dishId) => {
+  const query = `
+    SELECT
+      dishes.id AS id,
+      dishes.dish_name AS dish_name,
+      dishes.description AS description,
+      ROUND(AVG(dish_reviews.rating), 2) AS avg_rating,
+      MIN(dish_reviews.rating) AS min_rating,
+      MAX(dish_reviews.rating) AS max_rating,
+      COUNT(dish_reviews.id) AS review_count
+    FROM dishes
+    LEFT JOIN dish_reviews
+      ON dishes.id = dish_reviews.dish_id
+    WHERE dishes.business_id = $1 AND dishes.id = $2
+    GROUP BY dishes.id
+  `;
+
+  const result = await executeQuery(query, [parseInt(businessId, 10), dishId]);
+
+  if (result.length === 0) {
+    throw new DishNotFoundError();
+  }
+
+  return result[0];
 };

@@ -1,4 +1,4 @@
-import { findDishes, findMenu } from "../services/db/dish.js";
+import { findDishes, findMenu, findMenuItem } from "../services/db/dish.js";
 
 export const getDishes = async (req, res, next) => {
   try {
@@ -15,6 +15,17 @@ export const getMenu = async (req, res, next) => {
   try {
     const menu = await findMenu(businessId);
     res.status(200).json({ menu, success: true });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getMenuItem = async (req, res, next) => {
+  const { businessid: businessId, dishid: dishId } = req.params;
+
+  try {
+    const menuItem = await findMenuItem(businessId, dishId);
+    res.status(200).json({ menuItem, success: true });
   } catch (err) {
     next(err);
   }
