@@ -133,7 +133,7 @@ INSERT INTO businesses (owner_id,business_name, country, city, address, zip_code
 (8,'Harlequin', 'Sweden', 'Umeå', 'Rådhusesplanaden 2E', '90328', '090778588','https://www.harlequinumea.com', true),
 (9,'Hunger och Törst', 'Sweden', 'Umeå', 'Vasagatan 1', '90329', '090771000','https://www.hungerochtorst.se', true),
 (10,'Kebabnekajse Pizzeria', 'Sweden', 'Umeå', 'Rådhusesplanaden 18B', '90328', '090773939','https://www.kebabnekajsebagen.se', true),
-(41,'OPizza','Sweden','Umeå','Pizzagatan 1', '90301', '090783444', 'https://opizza.se',true);
+(43,'OPizza','Sweden','Umeå','Pizzagatan 1', '90301', '090783444', 'https://opizza.se',true);
 
 INSERT INTO dishes (business_id, dish_name, description, price) VALUES
 (1, 'Högrevsburgare', 'Juicy beef burger with homemade sauce and fries', 150),
