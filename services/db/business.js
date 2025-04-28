@@ -69,6 +69,7 @@ export const findBusinesses = async (requestQuery, location = "") => {
   query += ` GROUP BY businesses.id ORDER BY ${validSort} ${validOrder} LIMIT $${
     params.length + 1
   } OFFSET $${params.length + 2}`;
+
   params.push(limit, offset);
 
   return await executeQuery(query, params);

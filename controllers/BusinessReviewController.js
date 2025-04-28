@@ -1,6 +1,7 @@
 import {
   addReview,
   deleteReview,
+  findEveryReview,
   findRatingStats,
   findReview,
   findReviews,
@@ -80,6 +81,15 @@ export const getRatingStats = async (req, res, next) => {
     const ratingStats = await findRatingStats(businessId);
 
     res.status(200).json({ ratingStats, success: true });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getEveryReview = async (req, res, next) => {
+  try {
+    const reviews = await findEveryReview(req.query);
+    res.status(200).json({ reviews, success: true });
   } catch (err) {
     next(err);
   }
