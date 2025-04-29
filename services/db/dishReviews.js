@@ -72,7 +72,7 @@ export const updateReview = async (data) => {
 export const findReview = async (reviewId) => {
   const query = `
     SELECT * FROM dish_reviews
-    WHERE id = $1
+    WHERE dish_id = $1
   `;
 
   const result = await executeQuery(query, [parseInt(reviewId, 10)]);
@@ -84,11 +84,29 @@ export const findReview = async (reviewId) => {
   return result[0];
 };
 
-export const findReviews = async (dishId) => {
+export const findReviewById = async (dishId) => {
   const query = `
-    SELECT * FROM dish_reviews
-    WHERE dish_id = $1
+    SELECT  
+      dish_reviews.id AS id, 
+      dish_reviews.rating AS rating,
+      dish_reviews.review AS review,
+      dish_reviews.dish_id AS dish_id,
+      dish_reviews.created_at AS created_at,
+      dishes.dish_name AS dish_name,
+      dishes.description AS description, 
+      CAST(dishes.price AS INTEGER) AS price,
+      businesses.business_name AS business_name,
+      businesses.country AS country, 
+      businesses.city AS city
+    FROM dish_reviews
+    JOIN dishes 
+      ON dish_reviews.dish_id = dishes.id
+    JOIN businesses 
+      ON dishes.business_id = businesses.id
+    WHERE dish_reviews.id = $1
   `;
+
+  console.log("heelo");
 
   return await executeQuery(query, [parseInt(dishId, 10)]);
 };
@@ -124,10 +142,23 @@ export const queryEveryReview = async (requestQuery, location) => {
   const params = [];
 
   let query = `
-    SELECT dish_reviews.*
+    SELECT 
+      dish_reviews.id AS id, 
+      dish_reviews.rating AS rating,
+      dish_reviews.review AS review,
+      dish_reviews.dish_id AS dish_id,
+      dish_reviews.created_at AS created_at,
+      dishes.dish_name AS dish_name,
+      dishes.description AS description, 
+      CAST(dishes.price AS INTEGER) AS price,
+      businesses.business_name AS business_name,
+      businesses.country AS country, 
+      businesses.city AS city
     FROM dish_reviews
-    JOIN dishes ON dish_reviews.dish_id = dishes.id
-    JOIN businesses ON dishes.business_id = businesses.id
+    JOIN dishes 
+      ON dish_reviews.dish_id = dishes.id
+    JOIN businesses 
+      ON dishes.business_id = businesses.id
   `;
 
   if (location) {

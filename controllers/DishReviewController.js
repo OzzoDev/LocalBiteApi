@@ -3,7 +3,7 @@ import {
   deleteReview,
   findRatingStats,
   findReview,
-  findReviews,
+  findReviewById,
   queryEveryReview,
   updateReview,
 } from "../services/db/dishReviews.js";
@@ -11,6 +11,8 @@ import { getLocation } from "../utils/utils.js";
 
 export const getReview = async (req, res, next) => {
   const { reviewid: reviewId } = req.params;
+
+  console.log("jej");
 
   try {
     const review = await findReview(reviewId);
@@ -24,7 +26,7 @@ export const getReviews = async (req, res, next) => {
   const { dishid: dishId } = req.params;
 
   try {
-    const reviews = await findReviews(dishId);
+    const reviews = await findReviewById(dishId);
     res.status(200).json({ reviews, success: true });
   } catch (err) {
     next(err);
@@ -88,7 +90,11 @@ export const getEveryReview = async (req, res, next) => {
   const { lat: latitude, lon: longitude } = req.query;
 
   try {
-    const location = await getLocation(latitude, longitude);
+    let location;
+
+    if (latitude && longitude) {
+      location = await getLocation(latitude, longitude);
+    }
 
     const reviews = await queryEveryReview(req.query, location);
     res.status(200).json({ reviews, success: true });
