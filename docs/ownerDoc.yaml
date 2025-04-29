@@ -1,0 +1,319 @@
+tags:
+  - name: Business Owner
+    description: Endpoints for restaurant business owners to manage their business operations.
+
+paths:
+  /owner:
+    get:
+      tags: [Business Owner]
+      summary: Get businesses owned by the authenticated user
+      description: Retrieves a list of businesses associated with the currently authenticated and verified business owner. The owner ID is inferred from the authenticated user's token (i.e., `req.user`) and is not passed as a parameter.
+      responses:
+        200:
+          description: Businesses retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  businesses:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Business"
+        401:
+          description: User is either unauthenticated or not verified.
+
+    post:
+      tags: [Business Owner]
+      summary: Register a new business
+      description: >
+        Allows an authenticated and verified business owner to register a new business.
+        The request must include all required business details in the request body.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewBusiness"
+      responses:
+        201:
+          description: Business registered successfully.
+        400:
+          description: Request body validation error.
+        401:
+          description: User is either unauthenticated or not verified.
+        404:
+          description: Business not found or related reference missing.
+
+  /owner/{businessid}/{deletecommand}:
+    delete:
+      tags: [Business Owner]
+      summary: Delete a registered business
+      description:
+        Allows an authenticated, verified, and authorized business owner to delete a registered business.
+        Requires the business ID and a confirmation delete command as path parameters.
+      parameters:
+        - name: businessid
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the business to be deleted
+        - name: deletecommand
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Confirmation command to authorize deletion (e.g., "delete BUSINESS_NAME")
+      responses:
+        200:
+          description: Business deleted successfully.
+        401:
+          description: User is unauthenticated, not verified, or not authorized to delete this business.
+        404:
+          description: Business not found or already deleted.
+
+  /owner/{businessid}/dishes/:
+    get:
+      tags: [Business Owner]
+      summary: Get all dishes for a specific business
+      parameters:
+        - name: businessid
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the business whose dishes are being retrieved
+      responses:
+        200:
+          description: List of dishes retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DishArrayResponse"
+        404:
+          description: Dish not found
+        401:
+          description: User is unauthenticated or not verified or lacks right permissions
+
+    post:
+      tags: [Business Owner]
+      summary: Add a new dish to a specific business
+      parameters:
+        - name: businessid
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the business to which the dish will be added
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewDish"
+      responses:
+        201:
+          description: Dish added successfully
+        400:
+          description: Request body validation failed
+        401:
+          description: User is unauthenticated or not verified
+        404:
+          description: Business not found
+
+  /owner/{businessid}/dishes/{dishid}:
+    get:
+      tags: [Business Owner]
+      summary: Get a specific dish by ID
+      parameters:
+        - name: businessid
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: dishid
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the dish to retrieve
+      responses:
+        200:
+          description: Dish retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Dish"
+        401:
+          description: User is unauthenticated or not verified or lacks right permissions
+
+    patch:
+      tags: [Business Owner]
+      summary: Update a specific dish
+      parameters:
+        - name: businessid
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: dishid
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the dish to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateDish"
+      responses:
+        200:
+          description: Dish updated successfully
+        400:
+          description: Request body validation failed or update could not be completed
+        401:
+          description: User is unauthenticated or not verified or lacks right permissions
+        404:
+          description: Dish not found
+
+    delete:
+      tags: [Business Owner]
+      summary: Delete a specific dish
+      parameters:
+        - name: businessid
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: dishid
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the dish to delete
+      responses:
+        200:
+          description: Dish deleted successfully
+        401:
+          description: User is unauthenticated or not verified
+        404:
+          description: Business or dish not found
+
+components:
+  schemas:
+    Business:
+      type: object
+      properties:
+        id:
+          type: string
+        owner_id:
+          type: integer
+        business_name:
+          type: string
+        country:
+          type: string
+        city:
+          type: string
+        address:
+          type: string
+        zip_code:
+          type: string
+        business_phone:
+          type: string
+        business_website:
+          type: string
+          format: uri
+        is_verified:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+
+    NewBusiness:
+      type: object
+      required:
+        - business_name
+        - country
+        - city
+        - address
+        - zip_code
+        - business_phone
+      properties:
+        business_name:
+          type: string
+        country:
+          type: string
+        city:
+          type: string
+        address:
+          type: string
+        zip_code:
+          type: string
+        business_phone:
+          type: string
+        business_website:
+          type: string
+          format: uri
+          description: Optional website URL for the business
+
+    NewDish:
+      type: object
+      required:
+        - name
+        - price
+      properties:
+        name:
+          type: string
+        price:
+          type: number
+        description:
+          type: string
+        image_url:
+          type: string
+          format: uri
+
+    UpdateDish:
+      type: object
+      properties:
+        name:
+          type: string
+        price:
+          type: number
+        description:
+          type: string
+        image_url:
+          type: string
+          format: uri
+
+    Dish:
+      type: object
+      properties:
+        dish_name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+      example:
+        dish_name: "Prosciutto Arugula Pizza"
+        description: "Thinly sliced prosciutto with fresh arugula and parmesan"
+        price: 12
+
+    DishArrayResponse:
+      type: object
+      properties:
+        dishes:
+          type: array
+          items:
+            $ref: "#/components/schemas/Dish"
+      example:
+        dishes:
+          - dish_name: "Prosciutto Arugula Pizza"
+            description: "Thinly sliced prosciutto with fresh arugula and parmesan"
+            price: 13
+          - dish_name: "Spaghetti Carbonara"
+            description: "Classic Roman pasta with eggs, cheese, pancetta, and pepper"
+            price: 18
