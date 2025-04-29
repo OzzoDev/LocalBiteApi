@@ -3,8 +3,8 @@ import {
   deleteReview,
   findRatingStats,
   findReview,
-  queryBusinessReviews,
-  queryEveryReviews,
+  queryReviews,
+  queryEveryReview,
   updateReview,
 } from "../services/db/businessReviews.js";
 
@@ -25,7 +25,7 @@ export const getReviews = async (req, res, next) => {
   const { businessid: businessId } = req.params;
 
   try {
-    const reviews = await queryBusinessReviews(req.query, businessId);
+    const reviews = await queryReviews(req.query, businessId);
 
     res.status(200).json({ reviews, success: true });
   } catch (err) {
@@ -86,9 +86,9 @@ export const getRatingStats = async (req, res, next) => {
   }
 };
 
-export const getEveryReviews = async (req, res, next) => {
+export const getEveryReview = async (req, res, next) => {
   try {
-    const reviews = await queryEveryReviews(req.query);
+    const reviews = await queryEveryReview(req.query);
 
     res.status(200).json({ reviews, success: true });
   } catch (err) {

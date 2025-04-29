@@ -4,8 +4,10 @@ import {
   findRatingStats,
   findReview,
   findReviews,
+  queryEveryReview,
   updateReview,
 } from "../services/db/dishReviews.js";
+import { getLocation } from "../utils/utils.js";
 
 export const getReview = async (req, res, next) => {
   const { reviewid: reviewId } = req.params;
@@ -77,6 +79,19 @@ export const removeReview = async (req, res, next) => {
     res
       .status(200)
       .json({ message: `Dish with id '${reviewId}' deleted successfully`, success: true });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getEveryReview = async (req, res, next) => {
+  const { lat: latitude, lon: longitude } = req.query;
+
+  try {
+    const location = await getLocation(latitude, longitude);
+
+    const reviews = await queryEveryReview(req.query, location);
+    res.status(200).json({ reviews, success: true });
   } catch (err) {
     next(err);
   }

@@ -117,7 +117,7 @@ export const findRatingStats = async (businessId) => {
   return { averageRating, minRating, maxRating, reviewCount: numReviews };
 };
 
-export const queryEveryReviews = async (requestQuery) => {
+export const queryEveryReview = async (requestQuery) => {
   const { sort, order, page = 1, limit = 10 } = requestQuery;
   const offset = (page - 1) * limit;
 
@@ -135,7 +135,7 @@ export const queryEveryReviews = async (requestQuery) => {
   return await executeQuery(query, [limit, offset]);
 };
 
-export const queryBusinessReviews = async (requestQuery, businessId) => {
+export const queryReviews = async (requestQuery, businessId) => {
   const { sort, order, page = 1, limit = 10 } = requestQuery;
   const offset = (page - 1) * limit;
 
