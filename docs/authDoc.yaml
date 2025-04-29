@@ -1,0 +1,245 @@
+tags:
+  - name: Auth
+    description: Authentication and account operations
+
+paths:
+  /auth/password-reset-otp/{identifier}:
+    get:
+      tags: [Auth]
+      summary: Request password reset OTP
+      parameters:
+        - name: identifier
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Email or username
+      responses:
+        200:
+          description: OTP sent successfully
+        400:
+          description: User is already logged in, cannot request password reset OTP
+
+  /auth/signup:
+    post:
+      tags: [Auth]
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewUser"
+      responses:
+        201:
+          description: User registered successfully
+        400:
+          description: "User is already logged in, cannot register a new account, or validation error in request body"
+
+  /auth/signin:
+    post:
+      tags: [Auth]
+      summary: Log in a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+            examples:
+              loginWithEmail:
+                summary: Login with email
+                value:
+                  email: user@example.com
+                  password: password123
+              loginWithUsername:
+                summary: Login with username
+                value:
+                  username: testuser
+                  password: password123
+      responses:
+        200:
+          description: User authenticated successfully
+        400:
+          description: "User is already logged in, cannot sign in again, request body validation failed"
+        401:
+          description: "User is suspended and cannot sign in"
+
+  /auth/verify:
+    post:
+      tags: [Auth]
+      summary: Verify a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VerifyUser"
+            examples:
+              loginWithEmail:
+                summary: Verify with email
+                value:
+                  email: user@example.com
+                  otp: "12345678"
+              loginWithUsername:
+                summary: Verify with username
+                value:
+                  username: testuser
+                  otp: "12345678"
+      responses:
+        200:
+          description: User verified successfully
+        400:
+          description: "User is already logged in, cannot verify again, request body validation failed"
+        401:
+          description: "User is suspended and cannot verify"
+
+  /auth/signout:
+    post:
+      tags: [Auth]
+      summary: Sign out current user
+      responses:
+        200:
+          description: "User successfully signed out"
+        401:
+          description: "User is unauthenticated, cannot sign out"
+
+  /auth/reset-password:
+    post:
+      tags: [Auth]
+      summary: Reset user password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PasswordReset"
+            examples:
+              loginWithEmail:
+                summary: Reset password with email
+                value:
+                  email: user@example.com
+                  password: password123
+                  otp: "12345678"
+              loginWithUsername:
+                summary: Reset password with username
+                value:
+                  username: testuser
+                  password: password123
+                  otp: "12345678"
+      responses:
+        200:
+          description: "Password reset successful"
+        400:
+          description: "User is already logged in, or request body validation failed"
+
+  /auth/delete-account/{deletecommand}:
+    delete:
+      tags: [Auth]
+      summary: Delete user account
+      parameters:
+        - name: deletecommand
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: "Account deleted successfully"
+        401:
+          description: "Unauthorized. User is not authenticated"
+
+components:
+  schemas:
+    NewUser:
+      type: object
+      required: [email, password, name]
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        name:
+          type: string
+
+    LoginWithEmail:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+      additionalProperties: false
+
+    LoginWithUsername:
+      type: object
+      required: [username, password]
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      additionalProperties: false
+
+    LoginRequest:
+      oneOf:
+        - $ref: "#/components/schemas/LoginWithEmail"
+        - $ref: "#/components/schemas/LoginWithUsername"
+
+    VerifyByEmail:
+      type: object
+      required: [email, otp]
+      properties:
+        email:
+          type: string
+          format: email
+        otp:
+          type: string
+      additionalProperties: false
+
+    VerifyByUsername:
+      type: object
+      required: [username, otp]
+      properties:
+        username:
+          type: string
+        otp:
+          type: string
+      additionalProperties: false
+
+    VerifyUser:
+      oneOf:
+        - $ref: "#/components/schemas/VerifyByEmail"
+        - $ref: "#/components/schemas/VerifyByUsername"
+
+    PasswordResetByEmail:
+      type: object
+      required: [email, otp, newPassword]
+      properties:
+        email:
+          type: string
+          format: email
+        otp:
+          type: string
+        password:
+          type: string
+      additionalProperties: false
+
+    PasswordResetByUsername:
+      type: object
+      required: [username, otp, newPassword]
+      properties:
+        username:
+          type: string
+        otp:
+          type: string
+        password:
+          type: string
+      additionalProperties: false
+
+    PasswordReset:
+      oneOf:
+        - $ref: "#/components/schemas/PasswordResetByEmail"
+        - $ref: "#/components/schemas/PasswordResetByUsername"
