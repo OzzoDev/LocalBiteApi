@@ -15,4 +15,6 @@ router.get("/businesses", getEveryBusinessReview);
 
 router.get("/dishes", getEveryDishReview);
 
+router.get("/:businessid/dishes", getEveryDishReview);
+
 export default router;

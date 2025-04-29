@@ -140,6 +140,35 @@ export const queryEveryReview = async (requestQuery, location) => {
   const validOrder = order === "asc" ? "ASC" : "DESC";
 
   params.push(limit, offset);
+
+  query += ` ORDER BY ${validSort} ${validOrder} LIMIT $${params.length - 1} OFFSET $${
+    params.length
+  } `;
+
+  return await executeQuery(query, params);
+};
+
+export const queryReviewByBusiness = async (requestQuery, businessId) => {
+  const { sort, order, page = 1, limit = 10 } = requestQuery;
+  const offset = (page - 1) * limit;
+  const params = [];
+
+  let query = `
+    SELECT dish_reviews.*
+    FROM dish_reviews
+    JOIN dishes ON dish_reviews.dish_id = dishes.id
+    JOIN businesses ON dishes.business_id = businesses.id
+  `;
+
+  params.push(parseInt(businessId, 10));
+  query += ` WHERE businesses.id = $1`;
+
+  const allowedSortFields = ["rating", "created_at"];
+  const validSort = allowedSortFields.includes(sort) ? sort : "created_at";
+  const validOrder = order === "asc" ? "ASC" : "DESC";
+
+  params.push(limit, offset);
+
   query += ` ORDER BY ${validSort} ${validOrder} LIMIT $${params.length - 1} OFFSET $${
     params.length
   } `;

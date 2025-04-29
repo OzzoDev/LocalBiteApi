@@ -139,9 +139,22 @@ export const queryReviews = async (requestQuery, businessId) => {
   const { sort, order, page = 1, limit = 10 } = requestQuery;
   const offset = (page - 1) * limit;
 
+  console.log("hello");
+
   let query = `
-    SELECT *
+    SELECT 
+      business_reviews.id AS id,
+      business_reviews.rating AS rating,
+      business_reviews.review AS review,
+      business_reviews.user_id AS user_id,
+      business_reviews.created_at AS created_at,
+      businesses.id AS business_id,
+      businesses.business_name AS business_name,
+      businesses.country AS country,
+      businesses.city AS city
     FROM business_reviews
+    INNER JOIN businesses
+      ON business_reviews.business_id = businesses.id
     WHERE business_id = $1
   `;
 

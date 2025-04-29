@@ -96,3 +96,14 @@ export const getEveryReview = async (req, res, next) => {
     next(err);
   }
 };
+
+export const getEveryBusinessReview = async (req, res, next) => {
+  const { businessid: businessId } = req.query;
+
+  try {
+    const reviews = await queryEveryReview(req.query, businessId);
+    res.status(200).json({ reviews, success: true });
+  } catch (err) {
+    next(err);
+  }
+};
