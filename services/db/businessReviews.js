@@ -139,8 +139,6 @@ export const queryReviews = async (requestQuery, businessId) => {
   const { sort, order, page = 1, limit = 10 } = requestQuery;
   const offset = (page - 1) * limit;
 
-  console.log("hello");
-
   let query = `
     SELECT 
       business_reviews.id AS id,

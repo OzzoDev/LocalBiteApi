@@ -6,11 +6,13 @@ import { corsOptions } from "./config/cors.js";
 import AuthRouter from "./routes/AuthRouter.js";
 import ApiRouter from "./routes/ApiRouter.js";
 import OwnerRouter from "./routes/OwnerRouter.js";
+import swaggerUi from "swagger-ui-express";
 import { serverSession, rotateSession } from "./middlewares/Session.js";
 import { authenticate, ensureIsVerified } from "./middlewares/Auth.js";
 import "./config/mongodb.js";
 import "./config/postgres.js";
 import { errorHandler, notFoundHandler } from "./middlewares/ErrorHandler.js";
+import { swaggerDocs } from "./config/swagger.js";
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -27,9 +29,11 @@ app.use("/auth", AuthRouter);
 app.use("/owner", authenticate, ensureIsVerified, OwnerRouter);
 app.use("/api", authenticate, ensureIsVerified, ApiRouter);
 
-app.get("/", (_, res) => {
-  res.send("Welcome to the LocalBiteApi");
+app.get("/", (req, res) => {
+  res.redirect("/docs");
 });
+
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.use(notFoundHandler);
 app.use(errorHandler);

@@ -106,8 +106,6 @@ export const findReviewById = async (dishId) => {
     WHERE dish_reviews.id = $1
   `;
 
-  console.log("heelo");
-
   return await executeQuery(query, [parseInt(dishId, 10)]);
 };
 
