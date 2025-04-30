@@ -3,7 +3,7 @@ tags:
     description: Endpoints for retrieving individual dishes, business menus, or all available dishes.
 
 paths:
-  /menu/{businessid}:
+  api/dishes/menu/{businessid}:
     get:
       tags: [Dishes]
       summary: Get menu for a specific business
@@ -23,7 +23,7 @@ paths:
         401:
           description: User is unauthenticated or not verified
 
-  /menu/{businessid}/{dishid}:
+  api/dishes/menu/{businessid}/{dishid}:
     get:
       tags: [Dishes]
       summary: Get a specific menu item by ID
@@ -48,7 +48,7 @@ paths:
         401:
           description: User is unauthenticated or not verified
 
-  /:
+  api/dishes/:
     get:
       tags: [Dishes]
       summary: Get all available dishes

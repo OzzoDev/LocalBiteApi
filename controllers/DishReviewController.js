@@ -5,6 +5,7 @@ import {
   findReview,
   findReviewById,
   queryEveryReview,
+  queryReviewByBusiness,
   updateReview,
 } from "../services/db/dishReviews.js";
 import { getLocation } from "../utils/utils.js";
@@ -103,11 +104,11 @@ export const getEveryReview = async (req, res, next) => {
   }
 };
 
-export const getEveryBusinessReview = async (req, res, next) => {
+export const getDishReviewByBusiness = async (req, res, next) => {
   const { businessid: businessId } = req.query;
 
   try {
-    const reviews = await queryEveryReview(req.query, businessId);
+    const reviews = await queryReviewByBusiness(req.query, businessId);
     res.status(200).json({ reviews, success: true });
   } catch (err) {
     next(err);

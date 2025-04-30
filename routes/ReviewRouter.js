@@ -3,7 +3,10 @@ import BusinessReviewRouter from "./BusinessReviewRouter.js";
 import DishReviwRouter from "./DishReviewRouter.js";
 import { ensureBusinessExists, ensureDishExists } from "../middlewares/Resources.js";
 import { getEveryReview as getEveryBusinessReview } from "../controllers/BusinessReviewController.js";
-import { getEveryReview as getEveryDishReview } from "../controllers/DishReviewController.js";
+import {
+  getDishReviewByBusiness,
+  getEveryReview as getEveryDishReview,
+} from "../controllers/DishReviewController.js";
 
 const router = express.Router();
 
@@ -15,6 +18,6 @@ router.get("/businesses", getEveryBusinessReview);
 
 router.get("/dishes", getEveryDishReview);
 
-router.get("/:businessid/dishes", getEveryDishReview);
+router.get("/:businessid/dishes", getDishReviewByBusiness);
 
 export default router;

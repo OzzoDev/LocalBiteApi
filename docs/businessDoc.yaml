@@ -1,0 +1,122 @@
+paths:
+  api/businesses/{businessid}:
+    get:
+      tags: [Business]
+      summary: Get a specific business by ID
+      parameters:
+        - name: businessid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Business retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BusinessByIdResponse"
+        401:
+          description: User is unauthenticated or not verified
+
+  api/businesses/:
+    get:
+      tags: [Business]
+      summary: Get all businesses
+      responses:
+        200:
+          description: List of businesses retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BusinessesResponse"
+        401:
+          description: User is unauthenticated or not verified
+
+components:
+  schemas:
+    BusinessWithStats:
+      type: object
+      properties:
+        business_id:
+          type: string
+        business_name:
+          type: string
+        country:
+          type: string
+        city:
+          type: string
+        address:
+          type: string
+        zip_code:
+          type: string
+        business_phone:
+          type: string
+        business_website:
+          type: string
+          format: uri
+        created_at:
+          type: string
+          format: date-time
+        review_count:
+          type: integer
+        avg_rating:
+          type: number
+        min_rating:
+          type: integer
+        max_rating:
+          type: integer
+        dish_count:
+          type: integer
+        avg_dish_price:
+          type: number
+
+    BusinessById:
+      type: object
+      properties:
+        id:
+          type: string
+        business_name:
+          type: string
+        country:
+          type: string
+        city:
+          type: string
+        address:
+          type: string
+        zip_code:
+          type: string
+        business_phone:
+          type: string
+        business_website:
+          type: string
+          format: uri
+        created_at:
+          type: string
+          format: date-time
+        review_count:
+          type: integer
+        avg_rating:
+          type: number
+        min_rating:
+          type: integer
+        max_rating:
+          type: integer
+        dish_count:
+          type: integer
+        avg_dish_price:
+          type: number
+
+    BusinessesResponse:
+      type: object
+      properties:
+        businesses:
+          type: array
+          items:
+            $ref: "#/components/schemas/BusinessWithStats"
+
+    BusinessByIdResponse:
+      type: object
+      properties:
+        business:
+          $ref: "#/components/schemas/BusinessById"

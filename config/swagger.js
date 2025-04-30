@@ -6,6 +6,7 @@ const mainDoc = yaml.load(fs.readFileSync(path.resolve("docs/mainDoc.yaml"), "ut
 const authDoc = yaml.load(fs.readFileSync(path.resolve("docs/authDoc.yaml"), "utf-8"));
 const ownerDoc = yaml.load(fs.readFileSync(path.resolve("docs/ownerDoc.yaml"), "utf-8"));
 const dishDoc = yaml.load(fs.readFileSync(path.resolve("docs/dishDoc.yaml"), "utf-8"));
+const businessDoc = yaml.load(fs.readFileSync(path.resolve("docs/businessDoc.yaml"), "utf-8"));
 
 export const swaggerDocs = {
   ...mainDoc,
@@ -13,6 +14,7 @@ export const swaggerDocs = {
     ...authDoc.paths,
     ...ownerDoc.paths,
     ...dishDoc.paths,
+    ...businessDoc.paths,
   },
   components: {
     ...(mainDoc.components || {}),
@@ -21,6 +23,7 @@ export const swaggerDocs = {
       ...(authDoc.components?.schemas || {}),
       ...(ownerDoc.components?.schemas || {}),
       ...(dishDoc.components?.schemas || {}),
+      ...(businessDoc.components?.schemas || {}),
     },
   },
 };
