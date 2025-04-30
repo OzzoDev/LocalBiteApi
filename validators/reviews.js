@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { RequestBodyValidationError } from "../errors/ValidationErrors.js";
 
-const businessReviewSchema = z
+const reviewSchema = z
   .object({
     rating: z
       .number({ message: "Rating must be a number" })
@@ -15,7 +15,7 @@ const businessReviewSchema = z
   })
   .strict();
 
-const businessUpdateReviewSchema = z
+const updateReviewSchema = z
   .object({
     rating: z
       .number({ message: "Rating must be a number" })
@@ -33,7 +33,7 @@ const businessUpdateReviewSchema = z
 
 export const validateReviewBody = (req, res, next) => {
   try {
-    businessReviewSchema.parse(req.body);
+    reviewSchema.parse(req.body);
     next();
   } catch (err) {
     if (err instanceof z.ZodError) {
@@ -48,7 +48,7 @@ export const validateReviewBody = (req, res, next) => {
 
 export const validateUpdateReviewBody = (req, res, next) => {
   try {
-    businessUpdateReviewSchema.parse(req.body);
+    updateReviewSchema.parse(req.body);
     next();
   } catch (err) {
     if (err instanceof z.ZodError) {

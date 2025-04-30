@@ -1,7 +1,7 @@
 paths:
   /api/businesses/{businessid}:
     get:
-      tags: [Business]
+      tags: [Businesses]
       summary: Get a specific business by ID
       parameters:
         - name: businessid
@@ -21,60 +21,60 @@ paths:
 
   /api/businesses/:
     get:
-      tags: [Business]
+      tags: [Businesses]
       summary: Get all businesses
       description: Retrieves a list of businesses. Supports search, sorting, pagination, and optional geolocation-based filtering.
       parameters:
-      - name: search
-        in: query
-        description: Search by business name, country, city, address, or dishes.
-        required: false
-        schema:
-          type: string
-      - name: sort
-        in: query
-        description: Sort by one of the allowed fields: business_name, created_at, avg_rating, min_rating, max_rating, review_count.
-        required: false
-        schema:
-          type: string
-          enum: [business_name, created_at, avg_rating, min_rating, max_rating, review_count]
-      - name: order
-        in: query
-        description: Sorting order, either ascending or descending.
-        required: false
-        schema:
-          type: string
-          enum: [asc, desc]
-      - name: page
-        in: query
-        description: Page number for pagination (default is 1).
-        required: false
-        schema:
-          type: integer
-          default: 1
-          minimum: 1
-      - name: limit
-        in: query
-        description: Number of results per page (default is 10).
-        required: false
-        schema:
-          type: integer
-          default: 10
-          minimum: 1
-      - name: lat
-        in: query
-        description: Latitude for geolocation-based business filtering.
-        required: false
-        schema:
-          type: number
-          format: float
-      - name: lon
-        in: query
-        description: Longitude for geolocation-based business filtering.
-        required: false
-        schema:
-          type: number
-          format: float
+        - name: search
+          in: query
+          description: Search by business name, country, city, address, or dishes.
+          required: false
+          schema:
+            type: string
+        - name: sort
+          in: query
+          description: Sort by one of the allowed fields, business_name, created_at, avg_rating, min_rating, max_rating, review_count.
+          required: false
+          schema:
+            type: string
+            enum: [business_name, created_at, avg_rating, min_rating, max_rating, review_count]
+        - name: order
+          in: query
+          description: Sorting order, either ascending or descending.
+          required: false
+          schema:
+            type: string
+            enum: [asc, desc]
+        - name: page
+          in: query
+          description: Page number for pagination (default is 1).
+          required: false
+          schema:
+            type: integer
+            default: 1
+            minimum: 1
+        - name: limit
+          in: query
+          description: Number of results per page (default is 10).
+          required: false
+          schema:
+            type: integer
+            default: 10
+            minimum: 1
+        - name: lat
+          in: query
+          description: Latitude for geolocation-based business filtering.
+          required: false
+          schema:
+            type: number
+            format: float
+        - name: lon
+          in: query
+          description: Longitude for geolocation-based business filtering.
+          required: false
+          schema:
+            type: number
+            format: float
       responses:
         200:
           description: List of businesses retrieved successfully

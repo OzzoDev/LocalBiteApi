@@ -13,8 +13,6 @@ import { getLocation } from "../utils/utils.js";
 export const getReview = async (req, res, next) => {
   const { reviewid: reviewId } = req.params;
 
-  console.log("jej");
-
   try {
     const review = await findReview(reviewId);
     res.status(200).json({ review, success: true });
@@ -36,6 +34,8 @@ export const getReviews = async (req, res, next) => {
 
 export const getRatingStats = async (req, res, next) => {
   const { dishid: dishId } = req.params;
+
+  console.log("dishId", dishId);
 
   try {
     const ratingStats = await findRatingStats(dishId);
@@ -105,7 +105,7 @@ export const getEveryReview = async (req, res, next) => {
 };
 
 export const getDishReviewByBusiness = async (req, res, next) => {
-  const { businessid: businessId } = req.query;
+  const { businessid: businessId } = req.params;
 
   try {
     const reviews = await queryReviewByBusiness(req.query, businessId);

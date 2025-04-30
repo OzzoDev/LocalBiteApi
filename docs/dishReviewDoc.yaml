@@ -1,0 +1,389 @@
+tags:
+  - name: Dish Reviews
+    description: Endpoints for retrieving user reviews on individual dishes
+
+paths:
+  /api/reviews/dishes:
+    get:
+      tags: [Dish Reviews]
+      summary: Get all dish reviews
+      description: Retrieves a list of all user reviews made on dishes, including dish and business metadata.
+      parameters:
+        - name: lat
+          in: query
+          required: false
+          schema:
+            type: number
+          description: Latitude for location-based filtering
+        - name: lon
+          in: query
+          required: false
+          schema:
+            type: number
+          description: Longitude for location-based filtering
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [rating]
+          description: Sort results by rating (only allowed field)
+        - name: order
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [asc, desc]
+          description: Order of sorting — ascending or descending
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 1
+            minimum: 1
+          description: Page number for paginated results
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 10
+            minimum: 1
+          description: Maximum number of results per page
+      responses:
+        200:
+          description: List of dish reviews retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reviews:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/EveryDishReview"
+        401:
+          description: User is unauthenticated or not verified
+
+  /api/reviews/{businessid}/dishes:
+    get:
+      tags: [Dish Reviews]
+      summary: Get all dish reviews for a specific business
+      description: Retrieves all user reviews for dishes from the specified business.
+      parameters:
+        - name: businessid
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the business
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [rating]
+          description: Sort results by rating (only allowed field)
+        - name: order
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [asc, desc]
+          description: Order of sorting — ascending or descending
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 1
+            minimum: 1
+          description: Page number for paginated results
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 10
+            minimum: 1
+          description: Maximum number of results per page
+      responses:
+        200:
+          description: List of dish reviews for the business retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reviews:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/DishReviewByBusiness"
+        401:
+          description: User is unauthenticated or not verified
+
+  /api/reviews/dishes/{dishid}:
+    get:
+      tags: [Dish Reviews]
+      summary: Get all reviews for a dish
+      description: Retrieves a list of all user reviews with dish and business information.
+      parameters:
+        - in: path
+          name: dishid
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: List of reviews retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reviews:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/FullDishReview"
+        401:
+          description: User is unauthenticated or not verified
+        404:
+          description: Dish not found
+
+    post:
+      tags: [Dish Reviews]
+      summary: Create a review for a dish
+      parameters:
+        - in: path
+          name: dishid
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DishReviewCreate"
+      responses:
+        201:
+          description: Review created successfully
+        401:
+          description: User is unauthenticated or not verified
+        404:
+          description: Dish not found
+
+  /api/reviews/dishes/{dishid}/rating:
+    get:
+      tags: [Dish Reviews]
+      summary: Get rating statistics for a dish
+      parameters:
+        - in: path
+          name: dishid
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Rating statistics retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ratingStats:
+                    $ref: "#/components/schemas/RatingStats"
+        401:
+          description: User is unauthenticated or not verified
+        404:
+          description: Dish not found
+
+  /api/reviews/dishes/{dishid}/{reviewid}:
+    get:
+      tags: [Dish Reviews]
+      summary: Get a specific review for a dish
+      parameters:
+        - in: path
+          name: dishid
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: reviewid
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Review retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  review:
+                    $ref: "#/components/schemas/SingleDishReview"
+        401:
+          description: User is unauthenticated or not verified
+        404:
+          description: Dish or review not found
+
+    patch:
+      tags: [Dish Reviews]
+      summary: Update a review for a dish
+      parameters:
+        - in: path
+          name: dishid
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: reviewid
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DishReviewUpdate"
+      responses:
+        200:
+          description: Review updated successfully
+        401:
+          description: User is unauthenticated or not verified
+        404:
+          description: Dish or review not found
+
+components:
+  schemas:
+    EveryDishReview:
+      type: object
+      properties:
+        id:
+          type: string
+        rating:
+          type: integer
+        review:
+          type: string
+        dish_id:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        dish_name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        business_name:
+          type: string
+        country:
+          type: string
+        city:
+          type: string
+
+    DishReviewByBusiness:
+      type: object
+      properties:
+        id:
+          type: string
+        user_id:
+          type: integer
+        dish_id:
+          type: integer
+        rating:
+          type: integer
+        review:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+
+    FullDishReview:
+      type: object
+      properties:
+        id:
+          type: string
+        rating:
+          type: integer
+        review:
+          type: string
+        dish_id:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        dish_name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        business_name:
+          type: string
+        country:
+          type: string
+        city:
+          type: string
+
+    SingleDishReview:
+      type: object
+      properties:
+        id:
+          type: string
+        user_id:
+          type: integer
+        dish_id:
+          type: integer
+        rating:
+          type: integer
+        review:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+
+    RatingStats:
+      type: object
+      properties:
+        averageRating:
+          type: number
+        minRating:
+          type: number
+        maxRating:
+          type: number
+        reviewCount:
+          type: integer
+
+    DishReviewCreate:
+      type: object
+      required: [rating, review]
+      properties:
+        rating:
+          type: number
+          minimum: 1
+          maximum: 10
+          example: 9
+        review:
+          type: string
+          minLength: 10
+          maxLength: 200
+          example: "Juicy and flavorful burger, would order again."
+
+    DishReviewUpdate:
+      type: object
+      properties:
+        rating:
+          type: number
+          minimum: 1
+          maximum: 10
+          example: 8
+        review:
+          type: string
+          minLength: 10
+          maxLength: 200
+          example: "Updated review with more details."

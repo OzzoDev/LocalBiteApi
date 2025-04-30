@@ -164,7 +164,7 @@ export const queryEveryReview = async (requestQuery, location) => {
     query += ` WHERE LOWER(businesses.city) ILIKE $${params.length} `;
   }
 
-  const allowedSortFields = ["rating", "created_at"];
+  const allowedSortFields = ["rating"];
   const validSort = allowedSortFields.includes(sort) ? sort : "created_at";
   const validOrder = order === "asc" ? "ASC" : "DESC";
 

@@ -1,11 +1,11 @@
 tags:
-  - name: Business Review
+  - name: Business Reviews
     description: Endpoints for retrieving user reviews related to restaurant businesses.
 
 paths:
   /api/reviews/businesses:
     get:
-      tags: [Business Review]
+      tags: [Business Reviews]
       summary: Get all business reviews
       description: Retrieves all user reviews made on businesses.
       parameters:
@@ -51,7 +51,7 @@ paths:
 
   /api/reviews/businesses/{businessid}/rating:
     get:
-      tags: [Business Review]
+      tags: [Business Reviews]
       summary: Get rating statistics for a business
       parameters:
         - name: businessid
@@ -73,7 +73,7 @@ paths:
 
   /api/reviews/businesses/{businessid}/{reviewid}:
     get:
-      tags: [Business Review]
+      tags: [Business Reviews]
       summary: Get a specific review by ID
       parameters:
         - name: businessid
@@ -100,7 +100,7 @@ paths:
 
   /api/reviews/businesses/{businessid}:
     get:
-      tags: [Business Review]
+      tags: [Business Reviews]
       summary: Get all reviews for a business
       parameters:
         - name: businessid
@@ -149,7 +149,7 @@ paths:
           description: User is unauthenticated or not verified
 
     post:
-      tags: [Business Review]
+      tags: [Business Reviews]
       summary: Submit a new review for a business
       parameters:
         - name: businessid
@@ -172,7 +172,7 @@ paths:
           description: User is unauthenticated or not verified
 
     patch:
-      tags: [Business Review]
+      tags: [Business Reviews]
       summary: Update an existing review
       parameters:
         - name: businessid
@@ -195,7 +195,7 @@ paths:
           description: User is unauthenticated, not verified, or lacks permission to update the review
 
     delete:
-      tags: [Business Review]
+      tags: [Business Reviews]
       summary: Delete a review
       parameters:
         - name: businessid

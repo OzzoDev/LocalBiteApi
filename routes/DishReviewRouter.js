@@ -11,9 +11,9 @@ import { validateReviewBody, validateUpdateReviewBody } from "../validators/revi
 
 const router = express.Router({ mergeParams: true });
 
-router.get("/:reviewid", getReview);
-
 router.get("/rating", getRatingStats);
+
+router.get("/:reviewid", getReview);
 
 router.get("/", getReviews);
 
