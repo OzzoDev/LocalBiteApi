@@ -1,0 +1,337 @@
+tags:
+  - name: Business Review
+    description: Endpoints for retrieving user reviews related to restaurant businesses.
+
+paths:
+  /api/reviews/businesses:
+    get:
+      tags: [Business Review]
+      summary: Get all business reviews
+      description: Retrieves all user reviews made on businesses.
+      parameters:
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [rating]
+          description: Sort field (only `rating` is supported)
+        - name: order
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [asc, desc]
+          description: Sort order (`asc` for ascending, `desc` for descending)
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          description: Page number for pagination (default is 1)
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 10
+          description: Number of results per page (default is 10)
+      responses:
+        200:
+          description: List of business reviews retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BusinessReviewsResponse"
+        401:
+          description: User is unauthenticated or not verified
+
+  /api/reviews/businesses/{businessid}/rating:
+    get:
+      tags: [Business Review]
+      summary: Get rating statistics for a business
+      parameters:
+        - name: businessid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Rating statistics retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BusinessRatingStats"
+        401:
+          description: User is unauthenticated or not verified
+        404:
+          description: Business not found
+
+  /api/reviews/businesses/{businessid}/{reviewid}:
+    get:
+      tags: [Business Review]
+      summary: Get a specific review by ID
+      parameters:
+        - name: businessid
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: reviewid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Review retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BusinessReviewResponse"
+        401:
+          description: User is unauthenticated or not verified
+        404:
+          description: Review not found
+
+  /api/reviews/businesses/{businessid}:
+    get:
+      tags: [Business Review]
+      summary: Get all reviews for a business
+      parameters:
+        - name: businessid
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [rating]
+          description: Sort field (only `rating` is supported)
+        - name: order
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [asc, desc]
+          description: Sort order (`asc` for ascending, `desc` for descending)
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          description: Page number for pagination (default is 1)
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 10
+          description: Number of results per page (default is 10)
+      responses:
+        200:
+          description: List of reviews retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BusinessReviewsResponse"
+        401:
+          description: User is unauthenticated or not verified
+
+    post:
+      tags: [Business Review]
+      summary: Submit a new review for a business
+      parameters:
+        - name: businessid
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewBusinessReview"
+      responses:
+        201:
+          description: Review submitted successfully
+        400:
+          description: Request body validation failed
+        401:
+          description: User is unauthenticated or not verified
+
+    patch:
+      tags: [Business Review]
+      summary: Update an existing review
+      parameters:
+        - name: businessid
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateBusinessReview"
+      responses:
+        200:
+          description: Review updated successfully
+        400:
+          description: Update error or request body validation failed
+        401:
+          description: User is unauthenticated, not verified, or lacks permission to update the review
+
+    delete:
+      tags: [Business Review]
+      summary: Delete a review
+      parameters:
+        - name: businessid
+          in: path
+          required: true
+          schema:
+            type: string
+
+      responses:
+        200:
+          description: Review deleted successfully
+        401:
+          description: User is unauthenticated, not verified, or lacks permission to delete the review
+
+components:
+  schemas:
+    BusinessRatingStats:
+      type: object
+      properties:
+        ratingStats:
+          type: object
+          properties:
+            averageRating:
+              type: number
+              example: 9
+            minRating:
+              type: integer
+              example: 7
+            maxRating:
+              type: integer
+              example: 10
+            reviewCount:
+              type: integer
+              example: 20
+
+    BusinessReview:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "1"
+        user_id:
+          type: integer
+          example: 11
+        business_id:
+          type: integer
+          example: 1
+        rating:
+          type: integer
+          example: 10
+        review:
+          type: string
+          example: "The beef burger was juicy and full of flavor! Highly recommended."
+        created_at:
+          type: string
+          format: date-time
+          example: "2025-04-29T15:51:14.601Z"
+
+    BusinessReviewWithBusinessInfo:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "74"
+        rating:
+          type: integer
+          example: 9
+        review:
+          type: string
+          example: "Amazing pizza and cozy atmosphere! Will definitely come back."
+        user_id:
+          type: integer
+          example: 24
+        created_at:
+          type: string
+          format: date-time
+          example: "2025-04-29T15:51:14.601Z"
+        business_id:
+          type: string
+          example: "11"
+        business_name:
+          type: string
+          example: "OPizza"
+        country:
+          type: string
+          example: "Sweden"
+        city:
+          type: string
+          example: "Umeå"
+
+    BusinessReviewResponse:
+      type: object
+      properties:
+        review:
+          $ref: "#/components/schemas/BusinessReview"
+
+    BusinessReviewsResponse:
+      type: object
+      properties:
+        reviews:
+          type: array
+          items:
+            $ref: "#/components/schemas/BusinessReviewWithBusinessInfo"
+
+    NewBusinessReview:
+      type: object
+      required:
+        - rating
+        - review
+      properties:
+        rating:
+          type: number
+          minimum: 1
+          maximum: 10
+          example: 8
+          description: Must be a number between 1 and 10.
+        review:
+          type: string
+          minLength: 10
+          maxLength: 200
+          example: "Great food and service!"
+          description: Must be a string between 10 and 200 characters.
+
+    UpdateBusinessReview:
+      type: object
+      properties:
+        review_id:
+          type: string
+          example: "1"
+        rating:
+          type: number
+          minimum: 1
+          maximum: 10
+          example: 7
+        review:
+          type: string
+          minLength: 10
+          maxLength: 200
+          example: "Updated review with more details"

@@ -1,4 +1,4 @@
-import { UpdateError } from "../../errors/BusinessOwnerError.js";
+import { BusinessNotFoundError, UpdateError } from "../../errors/BusinessOwnerError.js";
 import { NotUserReview, ReviewNotFoundError } from "../../errors/ReviewErrors.js";
 import { executeQuery } from "./init.js";
 
@@ -108,6 +108,10 @@ export const findRatingStats = async (businessId) => {
   `;
 
   const result = await executeQuery(query, [parseInt(businessId, 10)]);
+
+  if (result.length === 0) {
+    throw new BusinessNotFoundError();
+  }
 
   const averageRating = Math.round(result[0].avg_rating || 0);
   const minRating = result[0].min_rating || 0;

@@ -1,5 +1,5 @@
 paths:
-  api/businesses/{businessid}:
+  /api/businesses/{businessid}:
     get:
       tags: [Business]
       summary: Get a specific business by ID
@@ -19,7 +19,7 @@ paths:
         401:
           description: User is unauthenticated or not verified
 
-  api/businesses/:
+  /api/businesses/:
     get:
       tags: [Business]
       summary: Get all businesses
