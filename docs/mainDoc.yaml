@@ -3,4 +3,9 @@ info:
   title: Local bite RESTful API
   description: API documentation using Swagger
   version: 1.0.0
+
+servers:
+  - url: http://localhost:3123
+    description: Local development server
+
 paths: {}
